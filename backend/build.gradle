@@ -18,9 +18,43 @@ repositories {
 }
 
 dependencies {
+	// Spring Boot Web for creating web applications
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.jetbrains:annotations:24.0.0'
+
+	// Spring Boot Starter Test for testing Spring Boot applications
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// JUnit Platform Launcher for launching JUnit-based tests
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// MySQL Connector/J for connecting to MySQL databases
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// Spring Boot Data JPA for database access
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//spring health check
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	//Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// QueryDSL
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	//annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// Jakarta
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+
 }
 
 tasks.named('test') {
