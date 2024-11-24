@@ -1,23 +1,23 @@
-package user.dto;
+package com.lge.connected.user.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import user.entity.User;
+import com.lge.connected.user.entity.User;
 
 @Getter
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class UserLoginRequest {
+public class UserSignupRequest {
+    private String username;
     private String email;
     private String password;
 
     public User toEntity() {
         return User.builder()
-                .email(email)
+                .username(username)
                 .password(password)
                 .build();
     }
