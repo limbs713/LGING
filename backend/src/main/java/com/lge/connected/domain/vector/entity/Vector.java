@@ -1,15 +1,16 @@
 package com.lge.connected.domain.vector.entity;
 
+import com.lge.connected.domain.user.entity.User;
 import com.lge.connected.domain.vector.exception.VectorErrorCode;
 import com.lge.connected.domain.vector.exception.VectorException;
-import com.lge.connected.global.CustomException;
+import com.lge.connected.domain.video.entity.Comment;
+import com.lge.connected.domain.video.entity.Video;
+import com.lge.connected.domain.video.entity.VideoGenre;
+import com.lge.connected.global.util.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -113,6 +114,48 @@ public class Vector {
         mergedElements.addAll(moodVector.getElements());
         return new Vector(mergedElements);
     }
+
+    public static Vector applyRate(User user, Vector preferenceVector) {
+        // 기존 벡터의 요소를 복사하여 수정 가능한 리스트 생성
+        List<Double> updatedElements = new ArrayList<>(preferenceVector.getElements());
+
+        // 1. 댓글(Comment)을 통해 평점 데이터를 장르별로 분류
+        Map<String, List<Double>> genreRatingsMap = new HashMap<>();
+
+        for (Comment comment : user.getComments()) {
+            Double rating = comment.getRating();  // 사용자가 매긴 평점
+            Video video = comment.getVideo();    // 해당 평점의 비디오
+            VideoGenre videoGenre = video.getVideoGenre(); // 비디오의 장르 정보
+
+            List<String> genres = Vector.getTrueGenreElements(videoGenre.getGenreVector());
+
+            for (String genre : genres) {
+                genreRatingsMap.putIfAbsent(genre, new ArrayList<>());
+                genreRatingsMap.get(genre).add(rating);
+            }
+        }
+
+        // 2. 각 장르에 대해 평점 평균을 계산하고 -1~1 범위로 변환 및 벡터에 반영
+        for (Map.Entry<String, List<Double>> entry : genreRatingsMap.entrySet()) {
+            String genre = entry.getKey();
+            List<Double> ratings = entry.getValue();
+
+            // 평점 평균 계산
+            double averageRating = ratings.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+
+            // 0~5 점을 -1~1로 변환
+            double adjustedRating = (averageRating - 2.5) / 2.5;
+
+            // 장르 인덱스를 찾고 기존 벡터에 가중치 적용
+            int genreIndex = Vector.getGenreIndex(genre);
+            updatedElements.set(genreIndex, updatedElements.get(genreIndex) + adjustedRating);
+        }
+
+        // 3. 업데이트된 벡터 반환
+        return new Vector(updatedElements);
+    }
+
+
 
 
 
