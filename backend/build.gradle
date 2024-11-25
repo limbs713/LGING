@@ -13,6 +13,12 @@ java {
 	}
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -21,6 +27,7 @@ dependencies {
 	// Spring Boot Web for creating web applications
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.jetbrains:annotations:24.0.0'
+
 
 	// Spring Boot Starter Test for testing Spring Boot applications
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -62,6 +69,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
 }
 
