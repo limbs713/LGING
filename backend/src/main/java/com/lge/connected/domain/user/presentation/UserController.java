@@ -1,9 +1,12 @@
-package com.lge.connected.user.presentation;
+package com.lge.connected.domain.user.presentation;
 
-import com.lge.connected.user.application.UserService;
-import com.lge.connected.user.dto.UserSignupRequest;
+import com.lge.connected.domain.user.application.UserService;
+import com.lge.connected.domain.user.dto.UserSignupRequest;
+import com.lge.connected.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +27,13 @@ public class UserController {
         return ResponseEntity.badRequest().body("User already exists");
     }
 
-//    @GetMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
-//        if (userService.login(request)) {
-//            return ResponseEntity.ok("User logged in successfully");
-//        }
-//
-//        return ResponseEntity.badRequest().body("Invalid credentials");
-//    }
+    @GetMapping
+    public ResponseEntity<String> getUserInfo() {
+        User user = SecurityUtil.getCurrentUser();
+        if (userService.login(request)) {
+            return ResponseEntity.ok("User logged in successfully");
+        }
+
+        return ResponseEntity.badRequest().body("Invalid credentials");
+    }
 }

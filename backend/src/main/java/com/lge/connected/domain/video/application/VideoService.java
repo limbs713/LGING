@@ -1,15 +1,15 @@
-package com.lge.connected.video.application;
+package com.lge.connected.domain.video.application;
 
-import com.lge.connected.user.entity.Comment;
-import com.lge.connected.user.entity.Video;
-import com.lge.connected.video.repository.CommentRepository;
+import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.comment.entity.Comment;
+import com.lge.connected.domain.video.repository.CommentRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.lge.connected.video.dto.ResponseVideoDto;
-import com.lge.connected.video.repository.VideoRepository;
+import com.lge.connected.domain.video.dto.ResponseVideoDto;
+import com.lge.connected.domain.video.repository.VideoRepository;
 
 @Service
 @Transactional(readOnly = true)

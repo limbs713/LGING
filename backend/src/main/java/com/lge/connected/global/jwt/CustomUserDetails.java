@@ -1,6 +1,6 @@
 package com.lge.connected.global.jwt;
 
-import com.lge.connected.user.entity.User;
+import com.lge.connected.domain.user.entity.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,10 @@
-package com.lge.connected.user.application;
+package com.lge.connected.domain.user.application;
 
+import com.lge.connected.domain.user.dto.UserInfoResponse;
+import com.lge.connected.domain.user.dto.UserSignupRequest;
+import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.domain.user.repository.UserRepository;
 import com.lge.connected.global.jwt.CustomUserDetails;
-import com.lge.connected.user.dto.UserSignupRequest;
-import com.lge.connected.user.entity.User;
-import com.lge.connected.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,13 +29,13 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-//    public boolean login(UserLoginRequest request) {
-//        User user = userRepository.findByUsername(request.getUserName()).orElseThrow(
-//                () -> new IllegalArgumentException("User not found")
-//        );
-//
-//        return user.getPassword().equals(request.getPassword());
-//    }
+    public UserInfoResponse getUserInfo(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found")
+        );
+
+        return UserDetailResponse.of(user);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -1,4 +1,4 @@
-package com.lge.connected.user.entity;
+package com.lge.connected.domain.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

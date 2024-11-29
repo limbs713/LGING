@@ -1,6 +1,6 @@
 package com.lge.connected.global.jwt;
 
-import com.lge.connected.user.entity.User;
+import com.lge.connected.domain.user.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

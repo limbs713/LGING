@@ -1,7 +1,7 @@
-package com.lge.connected.video.presentation;
+package com.lge.connected.domain.video.presentation;
 
-import com.lge.connected.user.entity.Comment;
-import com.lge.connected.user.entity.Video;
+import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.comment.entity.Comment;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.lge.connected.video.application.VideoService;
-import com.lge.connected.video.dto.ResponseVideoDto;
+import com.lge.connected.domain.video.application.VideoService;
+import com.lge.connected.domain.video.dto.ResponseVideoDto;
 
 @RestController
 @RequestMapping("/api/v1/video")
@@ -32,15 +32,4 @@ public class VideoController {
     public ResponseEntity<List<Comment>> getAllComments(@PathVariable Long id){
         return ResponseEntity.ok(videoService.getAllComments(id));
     }
-
-//    @PostMapping("/{id}/comment")
-//    public ResponseEntity<String> addComment(@PathVariable Long id) {
-//        if (videoService.addComment(id)) {
-//            return ResponseEntity.ok("Comment added successfully");
-//        }
-//
-//        return ResponseEntity.badRequest().body("Failed to add comment");
-//    }
-
-
 }

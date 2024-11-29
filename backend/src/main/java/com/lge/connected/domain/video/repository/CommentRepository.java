@@ -1,6 +1,6 @@
-package com.lge.connected.video.repository;
+package com.lge.connected.domain.video.repository;
 
-import com.lge.connected.user.entity.Comment;
+import com.lge.connected.domain.comment.entity.Comment;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

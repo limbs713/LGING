@@ -1,4 +1,4 @@
-package com.lge.connected.user.entity;
+package com.lge.connected.domain.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +21,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private String sex;
+    private String gender;
     private String role;
     private int age;
 
