@@ -1,10 +1,13 @@
 package com.lge.connected.domain.user.presentation;
 
+import com.lge.connected.domain.bookmark.entity.Bookmark;
+import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.user.application.UserService;
+import com.lge.connected.domain.user.dto.UserInfoResponseDto;
 import com.lge.connected.domain.user.dto.UserSignupRequest;
-import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.global.util.SecurityUtils;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +31,22 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getUserInfo() {
-        User user = SecurityUtil.getCurrentUser();
-        if (userService.login(request)) {
-            return ResponseEntity.ok("User logged in successfully");
-        }
-
-        return ResponseEntity.badRequest().body("Invalid credentials");
+    public ResponseEntity<UserInfoResponseDto> getUserInfo() {
+        Long id = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(userService.getUserInfo(id));
     }
+
+    @GetMapping("/comments")
+    public ResponseEntity<List<Comment>>getAllComments(){
+        Long id = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(userService.getAllComments(id));
+    }
+
+
+    @GetMapping("/bookmark")
+    public ResponseEntity<List<Bookmark>> getAllBookmarkByUser(){
+        Long userId = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(userService.getAllBookmarkByUser(userId));
+    }
+
 }

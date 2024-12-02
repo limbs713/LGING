@@ -1,7 +1,7 @@
 package com.lge.connected.domain.bookmark.entity;
 
 import com.lge.connected.domain.user.entity.User;
-import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.global.util.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

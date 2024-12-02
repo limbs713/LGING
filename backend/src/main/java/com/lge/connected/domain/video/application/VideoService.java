@@ -1,8 +1,8 @@
 package com.lge.connected.domain.video.application;
 
-import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.comment.entity.Comment;
-import com.lge.connected.domain.video.repository.CommentRepository;
+import com.lge.connected.domain.comment.repository.CommentRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -24,20 +24,31 @@ public class VideoService {
                 .collect(Collectors.toList());
     }
 
-    public Video getVideoInfo(Long id){
+    public Video getVideoInfo(Long id) {
         return videoRepository.findById(id).orElseThrow(
-            () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
         );
     }
 
     public List<Comment> getAllComments(Long id) {
-        return commentRepository.findAllByVideoId(id);
+        Video video = videoRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+        );
+        return commentRepository.findAllByVideo(video);
     }
 
-//    public booloan addComment(Long videoId) {
-//        Comment comment = Comment.builder()
-//                        .
-//        commentRepository.save(comment);
-//        return true;
-//    }
+    public void addStar(int stars, Long videoId) {
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다."));
+        video.addStars(stars);
+        videoRepository.save(video);
+    }
+
+    public void changeStar(int prev, int curr, Long id) {
+        Video video = videoRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+        );
+        video.changeStars(prev, curr);
+        videoRepository.save(video);
+    }
 }

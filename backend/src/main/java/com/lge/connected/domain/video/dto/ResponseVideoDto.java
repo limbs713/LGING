@@ -1,6 +1,6 @@
 package com.lge.connected.domain.video.dto;
 
-import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.video.entity.Video;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

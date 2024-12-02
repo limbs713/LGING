@@ -1,10 +1,15 @@
 package com.lge.connected.domain.user.application;
 
-import com.lge.connected.domain.user.dto.UserInfoResponse;
+import com.lge.connected.domain.bookmark.entity.Bookmark;
+import com.lge.connected.domain.bookmark.repository.BookmarkRepository;
+import com.lge.connected.domain.comment.entity.Comment;
+import com.lge.connected.domain.user.dto.UserInfoResponseDto;
 import com.lge.connected.domain.user.dto.UserSignupRequest;
 import com.lge.connected.domain.user.entity.User;
 import com.lge.connected.domain.user.repository.UserRepository;
+import com.lge.connected.domain.comment.repository.CommentRepository;
 import com.lge.connected.global.jwt.CustomUserDetails;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final BookmarkRepository bookmarkRepository;
+
+    public List<Comment> getAllComments(Long id) {
+        return commentRepository.findByUserId(id);
+    }
+
+    public List<Bookmark> getAllBookmarkByUser(Long userId) {
+        return bookmarkRepository.findAllByUserId(userId);
+    }
 
     @Transactional
     public boolean signup(UserSignupRequest request) {
@@ -29,12 +44,12 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public UserInfoResponse getUserInfo(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
+    public UserInfoResponseDto getUserInfo(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException("User not found")
         );
 
-        return UserDetailResponse.of(user);
+        return UserInfoResponseDto.of(user);
     }
 
     @Override

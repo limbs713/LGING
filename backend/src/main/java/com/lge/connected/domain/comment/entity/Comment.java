@@ -1,7 +1,8 @@
 package com.lge.connected.domain.comment.entity;
 
+import com.lge.connected.domain.comment.dto.RequestCommentDto;
 import com.lge.connected.domain.user.entity.User;
-import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.global.util.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,4 +41,9 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_id")
     private Video video;
+
+    public void update(RequestCommentDto commentDto) {
+        stars = commentDto.getStars();
+        content = commentDto.getContent();
+    }
 }

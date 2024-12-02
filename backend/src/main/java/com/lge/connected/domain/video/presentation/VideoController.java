@@ -1,6 +1,6 @@
 package com.lge.connected.domain.video.presentation;
 
-import com.lge.connected.domain.user.entity.Video;
+import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.comment.entity.Comment;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
