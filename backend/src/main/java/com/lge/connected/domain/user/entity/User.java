@@ -25,7 +25,6 @@ public class User {
     private String nickname;
     private String loginId;
     private String password;
-    private String email;
     private Gender gender;
     private int age;
     private String role;
@@ -37,4 +36,10 @@ public class User {
 
     public void saveLatestArchiveId(Long latestArchiveId) {this.latestArchiveId = latestArchiveId;}
 
+    public void saveOnBoarding(String username, String nickname, String gender, int age) {
+        this.username = username;
+        this.nickname = nickname;
+        this.gender = Gender.fromText(gender);
+        this.age = age;
+    }
 }

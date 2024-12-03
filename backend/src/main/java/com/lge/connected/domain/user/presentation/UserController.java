@@ -1,8 +1,7 @@
 package com.lge.connected.domain.user.presentation;
 
 import com.lge.connected.domain.user.application.UserService;
-import com.lge.connected.domain.user.dto.UserLoginRequest;
-import com.lge.connected.domain.user.dto.UserSignupRequest;
+import com.lge.connected.domain.user.dto.*;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.global.config.jwt.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +36,16 @@ public class UserController {
 //        return ResponseEntity.badRequest().body("Invalid credentials");
 //    }
 
-    @GetMapping("/{userId}/recommend")
+    // 추천 받기
+    @GetMapping("/recommend/{userId}")
     public ResponseEntity<List<VideoResponseDTO>> recommendVenues(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.recommendVideos(userId, 5L));
+    }
+
+    // 닉네임, 나이, 성별 입력받기
+    @PostMapping("/onboarding/{userId}")
+    public ResponseEntity<UserResponseDTO> saveOnBoarding(@PathVariable Long userId, @RequestBody OnBoardingDTO onBoardingDTO) {
+        return ResponseEntity.ok(userService.saveOnBoarding(userId, onBoardingDTO));
     }
 
 

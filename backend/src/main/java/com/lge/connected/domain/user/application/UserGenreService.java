@@ -25,9 +25,13 @@ public class UserGenreService {
     private final UserGenreRepository userGenreRepository;
 
     @Transactional
-    public UserVectorResponseDTO addGenreVector(Long memberId, Map<String, Double> genres) {
-        User user = userRepository.findById(memberId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+    public UserVectorResponseDTO addGenreVector(Long userId, Map<String, Double> genres) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
         Vector preferenceVector = Vector.fromGenres(genres);
+
+        if (Vector.getTrueGenreElements(preferenceVector).size()>4){
+            throw new CustomException(UserGenreErrorCode.USER_GENRE_MAX_LIMIT);
+        }
 
         UserGenre userGenre = UserGenre.builder()
                 .user(user).genreVectorString(preferenceVector.toString())
@@ -46,8 +50,8 @@ public class UserGenreService {
 
 
     @Transactional
-    public UserVectorResponseDTO deleteGenreVector(Long memberId, Long memberGenreId) {
-        User user = userRepository.findById(memberId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+    public UserVectorResponseDTO deleteGenreVector(Long userId, Long memberGenreId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
         UserGenre userGenre = userGenreRepository.findById(memberGenreId).orElseThrow(()->new CustomException((UserGenreErrorCode.USER_GENRE_NOT_EXIST)));
         List<UserGenre> userGenres = userGenreRepository.findAllByUser(user);
 
@@ -67,8 +71,8 @@ public class UserGenreService {
                 .build();
     }
 
-    public List<UserVectorResponseDTO> getAllGenreVector(Long memberId) {
-        User user = userRepository.findById(memberId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+    public List<UserVectorResponseDTO> getAllGenreVector(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
         List<UserGenre> userGenres = userGenreRepository.findAllByUser(user);
         return userGenres.stream()
                 .map(userGenre -> UserVectorResponseDTO.builder()
@@ -82,8 +86,8 @@ public class UserGenreService {
                 .collect(Collectors.toList());
     }
 
-    public UserVectorResponseDTO getLatestGenreVector(Long memberId) {
-        User user = userRepository.findById(memberId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+    public UserVectorResponseDTO getLatestGenreVector(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
         UserGenre userGenre = userGenreRepository.findLatestGenreByUser(user).orElseThrow(()-> new CustomException((UserGenreErrorCode.USER_GENRE_NOT_EXIST)));
         return UserVectorResponseDTO.builder()
                 .vectorString(userGenre.getGenreVectorString())

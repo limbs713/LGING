@@ -65,7 +65,7 @@ public class Vector {
     public static List<String> getTrueGenreElements(Vector vector) {
         List<String> trueGenres = new ArrayList<>();
         for (int i = 0; i < vector.elements.size(); i++) {
-            if (vector.elements.get(i) == 1.0) {
+            if (vector.elements.get(i) >= 1.0) {
                 if (i < ALL_GENRES.size()) {
                     trueGenres.add(ALL_GENRES.get(i));
                 } else {

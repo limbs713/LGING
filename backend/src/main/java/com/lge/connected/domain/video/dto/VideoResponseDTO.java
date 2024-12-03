@@ -15,6 +15,7 @@ public class VideoResponseDTO {
     private String subtitle;
     private String source;
     private String thumbnail;
+    private String description;
     private List<String> tagList;
     private Integer likes;
     private Integer comments;

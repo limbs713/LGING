@@ -1,6 +1,8 @@
 package com.lge.connected.domain.user.application;
 
+import com.lge.connected.domain.user.dto.OnBoardingDTO;
 import com.lge.connected.domain.user.dto.UserLoginRequest;
+import com.lge.connected.domain.user.dto.UserResponseDTO;
 import com.lge.connected.domain.user.dto.UserSignupRequest;
 import com.lge.connected.domain.user.entity.Archive;
 import com.lge.connected.domain.user.entity.User;
@@ -128,6 +130,9 @@ public class UserService implements UserDetailsService {
                             .comments(video.getComments())
                             .views(video.getViews())
                             .doesLike(likeRepository.findByUserVideo(user,video).isPresent())
+                            .source(video.getSource())
+                            .thumbnail(video.getThumbnail())
+                            .description(video.getDescription())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -142,4 +147,23 @@ public class UserService implements UserDetailsService {
 
         return new CustomUserDetails(user);
     }
+
+    @Transactional
+    public UserResponseDTO saveOnBoarding(Long userId, OnBoardingDTO onBoardingDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+
+        user.saveOnBoarding(onBoardingDTO.getUsername(), onBoardingDTO.getNickname(), onBoardingDTO.getGender(), onBoardingDTO.getAge());
+        userRepository.save(user);
+        return UserResponseDTO.builder()
+                .userId(user.getId())
+                .loginId(user.getLoginId())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .gender(user.getGender())
+                .age(user.getAge())
+                .build();
+    }
+
+
 }
