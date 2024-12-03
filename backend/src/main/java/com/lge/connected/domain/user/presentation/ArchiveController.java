@@ -39,7 +39,7 @@ public class ArchiveController {
         return ResponseEntity.ok(archiveService.getArchives(userId));
     }
 
-    @PostMapping("/history/{userId}/{archiveId}")
+    @GetMapping("/history/{userId}/{archiveId}")
     public ResponseEntity<Long> toGetHistory(@PathVariable Long userId, @PathVariable Long archiveId) {
         return ResponseEntity.ok(archiveService.toGetHistory(userId, archiveId));
     }
