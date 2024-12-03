@@ -1,0 +1,76 @@
+.buttonCell {
+	width: 450px;
+}
+
+.bannerWrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.fullScreenOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :global(.enact_sandstone_MediaOverlay_MediaOverlay_video) {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+}
+
+.bannerVideo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.bannerText {
+    position: absolute;
+    bottom: 10%;
+    left: 5%;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    white-space: pre-line;
+}
+
+.netflixBackground {
+	background-color: black;
+	color: #ffffff;
+}
+
+.LuckyVickiLogo {
+	color: white;
+	font-size: 2rem;
+	font-weight: bold;
+	background: linear-gradient(to right, #fd312e, #f0ece4);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
+.netflixBanner {
+	height: 80vh;
+	background-size: cover;
+	background-position: center;
+}
+
+.netflixRow {
+	margin-top: 2rem;
+}
+
+.netflixRowTitle {
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
+}
