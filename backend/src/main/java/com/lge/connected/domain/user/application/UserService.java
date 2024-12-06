@@ -53,6 +53,8 @@ public class UserService implements UserDetailsService {
     private final VideoGenreRepository videoGenreRepository;
     private final LikeRepository likeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CommentRepository commentRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     public Long signup(UserSignupRequest request) {
@@ -83,14 +85,13 @@ public class UserService implements UserDetailsService {
         UserGenre userGenre;
         Archive archive;
 
-        if(user.getLatestArchiveId()==null){
-            archive = archiveRepository.findLatestArchiveByUser(user).orElseThrow(()->new CustomException(ArchiveErrorCode.ARCHIVE_NOT_EXIST));
+        if (user.getLatestArchiveId() == null) {
+            archive = archiveRepository.findLatestArchiveByUser(user).orElseThrow(() -> new CustomException(ArchiveErrorCode.ARCHIVE_NOT_EXIST));
             user.saveLatestArchiveId(archive.getArchiveId());
             userRepository.save(user);
-            userGenre= userGenreRepository.findLatestGenreByUser(user).orElseThrow(() -> new CustomException(UserGenreErrorCode.USER_GENRE_NOT_EXIST));
-        }
-        else{
-            archive = archiveRepository.findById(user.getLatestArchiveId()).orElseThrow(()->new CustomException(ArchiveErrorCode.ARCHIVE_NOT_EXIST));
+            userGenre = userGenreRepository.findLatestGenreByUser(user).orElseThrow(() -> new CustomException(UserGenreErrorCode.USER_GENRE_NOT_EXIST));
+        } else {
+            archive = archiveRepository.findById(user.getLatestArchiveId()).orElseThrow(() -> new CustomException(ArchiveErrorCode.ARCHIVE_NOT_EXIST));
             userGenre = userGenreRepository.findById(archive.getUserGenre().getUserGenreId()).orElseThrow(() -> new CustomException(UserGenreErrorCode.USER_GENRE_NOT_EXIST));
         }
 
@@ -100,8 +101,8 @@ public class UserService implements UserDetailsService {
         List<Video> allVideos = videoRepository.findAll();
         List<Vector> allVideoVectors = new ArrayList<>();
 
-        for(Video video : allVideos){
-            VideoGenre venueGenre = videoGenreRepository.findByVideo(video).orElseThrow(()->new CustomException(VideoGenreErrorCode.VIDEO_GENRE_NOT_EXIST));
+        for (Video video : allVideos) {
+            VideoGenre venueGenre = videoGenreRepository.findByVideo(video).orElseThrow(() -> new CustomException(VideoGenreErrorCode.VIDEO_GENRE_NOT_EXIST));
             allVideoVectors.add(venueGenre.getGenreVector());
         }
         List<Vector> recommendVideoVectors = allVideoVectors.stream()
@@ -135,17 +136,15 @@ public class UserService implements UserDetailsService {
                             .likes(video.getLikes())
                             .comments(video.getComments())
                             .views(video.getViews())
-                            .doesLike(likeRepository.findByUserVideo(user,video).isPresent())
+                            .doesLike(likeRepository.findByUserVideo(user, video).isPresent())
                             .source(video.getSource())
                             .thumbnail(video.getThumbnail())
                             .description(video.getDescription())
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
 
-
-    private final CommentRepository commentRepository;
-    private final BookmarkRepository bookmarkRepository;
 
     public List<Comment> getAllComments(Long id) {
         return commentRepository.findByUserId(id);
@@ -155,16 +154,6 @@ public class UserService implements UserDetailsService {
         return bookmarkRepository.findAllByUserId(userId);
     }
 
-    @Transactional
-    public boolean signup(UserSignupRequest request) {
-        User user = request.toEntity();
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return false;
-        }
-
-        userRepository.save(user);
-        return true;
-    }
 
     public UserInfoResponseDto getUserInfo(Long id) {
         User user = userRepository.findById(id).orElseThrow(
