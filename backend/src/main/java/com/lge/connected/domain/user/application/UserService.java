@@ -1,6 +1,11 @@
 package com.lge.connected.domain.user.application;
 
+import com.lge.connected.domain.bookmark.entity.Bookmark;
+import com.lge.connected.domain.bookmark.repository.BookmarkRepository;
+import com.lge.connected.domain.comment.entity.Comment;
+import com.lge.connected.domain.comment.repository.CommentRepository;
 import com.lge.connected.domain.user.dto.OnBoardingDTO;
+import com.lge.connected.domain.user.dto.UserInfoResponseDto;
 import com.lge.connected.domain.user.dto.UserLoginRequest;
 import com.lge.connected.domain.user.dto.UserResponseDTO;
 import com.lge.connected.domain.user.dto.UserSignupRequest;
@@ -35,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -136,6 +142,36 @@ public class UserService implements UserDetailsService {
                             .build();
                 })
                 .collect(Collectors.toList());
+
+
+    private final CommentRepository commentRepository;
+    private final BookmarkRepository bookmarkRepository;
+
+    public List<Comment> getAllComments(Long id) {
+        return commentRepository.findByUserId(id);
+    }
+
+    public List<Bookmark> getAllBookmarkByUser(Long userId) {
+        return bookmarkRepository.findAllByUserId(userId);
+    }
+
+    @Transactional
+    public boolean signup(UserSignupRequest request) {
+        User user = request.toEntity();
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return false;
+        }
+
+        userRepository.save(user);
+        return true;
+    }
+
+    public UserInfoResponseDto getUserInfo(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User not found")
+        );
+
+        return UserInfoResponseDto.of(user);
 
     }
 

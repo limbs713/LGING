@@ -1,5 +1,7 @@
 package com.lge.connected.domain.user.presentation;
 
+import com.lge.connected.domain.bookmark.entity.Bookmark;
+import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.user.application.UserService;
 import com.lge.connected.domain.user.dto.*;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
@@ -27,6 +29,7 @@ public class UserController {
         return ResponseEntity.badRequest().body("User already exists");
     }
 
+
 //    @PostMapping("/login")
 //    public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
 //        if (userService.login(request)) {
@@ -46,6 +49,26 @@ public class UserController {
     @PostMapping("/onboarding/{userId}")
     public ResponseEntity<UserResponseDTO> saveOnBoarding(@PathVariable Long userId, @RequestBody OnBoardingDTO onBoardingDTO) {
         return ResponseEntity.ok(userService.saveOnBoarding(userId, onBoardingDTO));
+    }
+
+
+    @GetMapping
+    public ResponseEntity<UserInfoResponseDto> getUserInfo() {
+        Long id = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(userService.getUserInfo(id));
+    }
+
+    @GetMapping("/comments")
+    public ResponseEntity<List<Comment>>getAllComments(){
+        Long id = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(userService.getAllComments(id));
+    }
+
+
+    @GetMapping("/bookmark")
+    public ResponseEntity<List<Bookmark>> getAllBookmarkByUser(){
+        Long userId = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(userService.getAllBookmarkByUser(userId));
     }
 
 
