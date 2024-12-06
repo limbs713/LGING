@@ -1,7 +1,7 @@
 package com.lge.connected.domain.user.entity;
 
+import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.user.constant.Gender;
-import com.lge.connected.domain.video.entity.Comment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

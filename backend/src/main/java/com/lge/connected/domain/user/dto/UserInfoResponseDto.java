@@ -20,7 +20,7 @@ public class UserInfoResponseDto {
         return UserInfoResponseDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .gender(user.getGender())
+                .gender(user.getGender().getText())
                 .age(user.getAge())
                 .build();
     }

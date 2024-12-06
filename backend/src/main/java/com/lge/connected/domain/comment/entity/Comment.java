@@ -31,7 +31,7 @@ public class Comment extends BaseTimeEntity {
 
     @Max(value = 5)
     @Min(value = 1)
-    private int stars;
+    private int rating;
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,7 +43,7 @@ public class Comment extends BaseTimeEntity {
     private Video video;
 
     public void update(RequestCommentDto commentDto) {
-        stars = commentDto.getStars();
+        rating = commentDto.getRating();
         content = commentDto.getContent();
     }
 }

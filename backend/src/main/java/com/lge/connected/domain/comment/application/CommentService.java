@@ -29,7 +29,7 @@ public class CommentService {
         Video video = videoRepository.findById(videoId).orElseThrow(
                 () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
         );
-        video.addStars(comment.getStars());
+        video.addStars(comment.getRating());
         commentRepository.save(comment);
         videoRepository.save(video);
     }
@@ -49,7 +49,7 @@ public class CommentService {
 
         if (comment.getUser().getId().equals(userId)) {
             Video video = comment.getVideo();
-            video.changeStars(comment.getStars(), commentDto.getStars());
+            video.changeStars(comment.getRating(), commentDto.getRating());
             comment.update(commentDto);
             videoRepository.save(video);
             commentRepository.save(comment);

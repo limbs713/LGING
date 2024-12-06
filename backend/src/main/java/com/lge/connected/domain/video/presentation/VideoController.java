@@ -1,10 +1,10 @@
 package com.lge.connected.domain.video.presentation;
 
+import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.video.application.VideoService;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.domain.video.dto.ResponseVideoDto;
 import com.lge.connected.domain.video.entity.Video;
-import com.lge.connected.domain.comment.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

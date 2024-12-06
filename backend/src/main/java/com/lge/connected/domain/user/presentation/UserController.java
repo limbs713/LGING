@@ -52,22 +52,19 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<UserInfoResponseDto> getUserInfo() {
-        Long id = SecurityUtils.getCurrentMemberId();
-        return ResponseEntity.ok(userService.getUserInfo(id));
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserInfoResponseDto> getUserInfo(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserInfo(userId));
     }
 
-    @GetMapping("/comments")
-    public ResponseEntity<List<Comment>>getAllComments(){
-        Long id = SecurityUtils.getCurrentMemberId();
-        return ResponseEntity.ok(userService.getAllComments(id));
+    @GetMapping("/{userId}/comments")
+    public ResponseEntity<List<Comment>>getAllComments(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.getAllComments(userId));
     }
 
 
-    @GetMapping("/bookmark")
-    public ResponseEntity<List<Bookmark>> getAllBookmarkByUser(){
-        Long userId = SecurityUtils.getCurrentMemberId();
+    @GetMapping("/{userId}/bookmark")
+    public ResponseEntity<List<Bookmark>> getAllBookmarkByUser(@PathVariable Long userId){
         return ResponseEntity.ok(userService.getAllBookmarkByUser(userId));
     }
 

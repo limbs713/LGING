@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class UserVectorResponseDTO {
     Long userId;
     Long vectorId;
-    String email;
     String nickname;
     String username;
     String vectorString;

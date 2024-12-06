@@ -3,7 +3,7 @@ package com.lge.connected.domain.comment.presentation;
 import com.lge.connected.domain.comment.application.CommentService;
 import com.lge.connected.domain.comment.dto.RequestCommentDto;
 import com.lge.connected.domain.comment.entity.Comment;
-import com.lge.connected.global.util.SecurityUtils;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +42,9 @@ public class CommentController {
         return ResponseEntity.badRequest().body("Failed to delete comment");
     }
 
-    @PostMapping("/{commentId}")
-    public ResponseEntity<String> updateComment(@PathVariable Long commentId,
+    @PostMapping("/{userId}/{commentId}")
+    public ResponseEntity<String> updateComment(@PathVariable Long userId, @PathVariable Long commentId,
                                                 @RequestBody RequestCommentDto commentDto) {
-        Long userId = SecurityUtils.getCurrentMemberId();
         commentService.updateComment(commentId, commentDto, userId);
         return ResponseEntity.ok("Comment updated successfully");
 

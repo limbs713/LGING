@@ -2,8 +2,7 @@ package com.lge.connected.domain.bookmark.presentation;
 
 import com.lge.connected.domain.bookmark.application.BookmarkService;
 import com.lge.connected.domain.bookmark.entity.Bookmark;
-import com.lge.connected.global.util.SecurityUtils;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookmarkController {
     private final BookmarkService bookmarkService;
 
-    @GetMapping("/{videoId}")
-    public ResponseEntity<Bookmark> getBookmarkByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
+    @GetMapping("/{userId}/{videoId}")
+    public ResponseEntity<Bookmark> getBookmarkByVideoId(@PathVariable Long userId, @PathVariable Long videoId) {
         return ResponseEntity.ok(bookmarkService.getBookmarkByVideoId(videoId,userId));
     }
 
-    @PostMapping("/{videoId}")
-    public ResponseEntity<String> addBookmarkByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
+    @PostMapping("/{userId}/{videoId}")
+    public ResponseEntity<String> addBookmarkByVideoId(@PathVariable Long userId, @PathVariable Long videoId) {
         bookmarkService.addBookmarkByVideoId(videoId, userId);
         return ResponseEntity.ok("Bookmark added successfully");
     }

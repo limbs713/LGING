@@ -1,7 +1,6 @@
 package com.lge.connected.domain.like.presentation;
 
 import com.lge.connected.domain.like.application.LikeService;
-import com.lge.connected.global.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,16 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikeController {
     private final LikeService likeService;
 
-    @PostMapping("/{videoId}")
-    public ResponseEntity<String> addLikeByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
+    @PostMapping("/{userId}//{videoId}")
+    public ResponseEntity<String> addLikeByVideoId(@PathVariable Long userId, @PathVariable Long videoId) {
         likeService.addLikeByVideoId(videoId, userId);
         return ResponseEntity.ok("Like added successfully");
     }
 
-    @DeleteMapping("/{videoId}")
-    public ResponseEntity<String> deleteLikeByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
+    @DeleteMapping("/{userId}/{videoId}")
+    public ResponseEntity<String> deleteLikeByVideoId(@PathVariable Long userId, @PathVariable Long videoId) {
         likeService.deleteLikeByVideoId(videoId, userId);
         return ResponseEntity.ok("Like deleted successfully");
     }

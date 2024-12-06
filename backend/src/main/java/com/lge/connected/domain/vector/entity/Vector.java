@@ -1,9 +1,9 @@
 package com.lge.connected.domain.vector.entity;
 
+import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.user.entity.User;
 import com.lge.connected.domain.vector.exception.VectorErrorCode;
 import com.lge.connected.domain.vector.exception.VectorException;
-import com.lge.connected.domain.video.entity.Comment;
 import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.video.entity.VideoGenre;
 import com.lge.connected.global.util.CustomException;
@@ -123,7 +123,7 @@ public class Vector {
         Map<String, List<Double>> genreRatingsMap = new HashMap<>();
 
         for (Comment comment : user.getComments()) {
-            Double rating = comment.getRating();  // 사용자가 매긴 평점
+            int rating = comment.getRating();  // 사용자가 매긴 평점
             Video video = comment.getVideo();    // 해당 평점의 비디오
             VideoGenre videoGenre = video.getVideoGenre(); // 비디오의 장르 정보
 
@@ -131,7 +131,7 @@ public class Vector {
 
             for (String genre : genres) {
                 genreRatingsMap.putIfAbsent(genre, new ArrayList<>());
-                genreRatingsMap.get(genre).add(rating);
+                genreRatingsMap.get(genre).add((double)rating);
             }
         }
 

@@ -1,11 +1,11 @@
 package com.lge.connected.domain.video.application;
 
+import com.lge.connected.domain.comment.entity.Comment;
+import com.lge.connected.domain.comment.repository.CommentRepository;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
-import com.lge.connected.domain.video.dto.ResponseVideoDto;
 import com.lge.connected.domain.video.entity.Video;
-import com.lge.connected.domain.video.entity.Comment;
+
 import com.lge.connected.domain.video.exception.VideoErrorCode;
-import com.lge.connected.domain.video.repository.CommentRepository;
 import com.lge.connected.domain.video.repository.VideoRepository;
 import com.lge.connected.global.util.CustomException;
 import lombok.RequiredArgsConstructor;

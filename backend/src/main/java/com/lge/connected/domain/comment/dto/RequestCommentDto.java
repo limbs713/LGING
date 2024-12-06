@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 public class RequestCommentDto {
     @Min(1)
     @Max(5)
-    private int stars;
+    private int rating;
     private String content;
 
     public Comment toEntity(){
         return Comment.builder()
-                .stars(stars)
+                .rating(rating)
                 .content(content)
                 .build();
     }

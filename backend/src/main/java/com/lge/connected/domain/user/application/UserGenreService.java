@@ -42,7 +42,6 @@ public class UserGenreService {
                 .vectorString(userGenre.getGenreVectorString())
                 .userId(user.getId())
                 .vectorId(userGenre.getUserGenreId())
-                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .build();
@@ -65,7 +64,6 @@ public class UserGenreService {
                 .vectorString(userGenre.getGenreVectorString())
                 .userId(user.getId())
                 .vectorId(userGenre.getUserGenreId())
-                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .build();
@@ -78,7 +76,6 @@ public class UserGenreService {
                 .map(userGenre -> UserVectorResponseDTO.builder()
                         .userId(user.getId())
                         .vectorId(userGenre.getUserGenreId())
-                        .email(user.getEmail())
                         .nickname(user.getNickname())
                         .username(user.getUsername())
                         .vectorString(userGenre.getGenreVectorString())
@@ -93,7 +90,6 @@ public class UserGenreService {
                 .vectorString(userGenre.getGenreVectorString())
                 .userId(user.getId())
                 .vectorId(userGenre.getUserGenreId())
-                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .build();
