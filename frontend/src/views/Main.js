@@ -1,51 +1,56 @@
-import Alert from '@enact/sandstone/Alert';
-import BodyText from '@enact/sandstone/BodyText';
 import {Header, Panel} from '@enact/sandstone/Panels';
-import {usePopup} from './MainState';
 
 import css from './Main.module.less';
-import $L from '@enact/i18n/$L';
-import {useProcStat} from '../hooks/useData';
 
 import Scroller from '@enact/sandstone/Scroller';
-import Item from '@enact/sandstone/Item';
-import VirtualGridList from '@enact/sandstone/VirtualList';
-import ImageItem from '@enact/sandstone/ImageItem';
 import MediaOverlay from '@enact/sandstone/MediaOverlay';
+import IconItem from '@enact/sandstone/IconItem';
+import styled from 'styled-components';
+import Video from '../views/Video';
+
+const CustomHeader = styled(Header)`
+	.enact_ui_Layout_Layout_layout.enact_sandstone_Panels_Header_titlesRow {
+		padding-bottom: 0;
+	}
+`;
+
+const StyledIconItem = styled(IconItem)`
+	background: #1b1b1b;
+	border-radius: 15px;
+	width: 240px;
+	height: 180px;
+
+	& > .enact_ui_Layout_Layout_layout {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		padding-block-end: 1rem;
+	}
+
+	& .enact_sandstone_Icon_Icon_icon.enact_sandstone_Icon_Icon_large {
+		--icon-size: 5rem;
+	}
+
+	& .enact_sandstone_IconItem_IconItem_label {
+		font-size: 1.25rem;
+	}
+
+	& .enact_sandstone_IconItem_IconItem_iconItem {
+		padding-block-end: 10px;
+	}
+`;
+
 const Main = props => {
-	const {openPopup} = usePopup();
-	const {procStat = {open: false, onClose: () => {}}} = useProcStat();
-
-	const handlePlayClick = () => {
-		openPopup('play');
-	};
-
-	const handleInfoClick = () => {
-		openPopup('info');
-	};
-
-	const renderItem = ({index, ...rest}) => (
-		<ImageItem
-			{...rest}
-			src={`https://picsum.photos/300/450?random=${index}`}
-			caption={$L('Movie {index}', {index: index + 1})}
-		/>
-	);
-
-    
-
 	return (
-		<Panel {...props} className={css.netflixBackground}>
-			<Header type="compact" css={{header: 'LuckyVickiLogo'}} title="LG OTT" />
-			<Scroller>
-				<div className={css.bannerWrapper}>
+		<Panel {...props} className={css.homeBackground}>
+			<Scroller className={css.centeredScroller} verticalScrollbar="hidden">
+				<div>
+					<CustomHeader type="compact" title="LG OTT" />
 					<MediaOverlay
-						className={css.fullScreenOverlay}
+						className={`${css.fullScreenOverlay} ${css.mediaOverlay}`}
 						css={{
-							image: css.bannerVideo,
-							textLayout: css.bannerText
+							image: css.bannerVideo
 						}}
-						text="다양한 영상을 추천받으세요.\n당신의 취향대로"
 						mediaComponent="video"
 						loop
 						noAutoPlay={false}
@@ -54,50 +59,51 @@ const Main = props => {
 						<source
 							src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 							type="video/mp4"
+							height="150"
+							width="50"
 						/>
 					</MediaOverlay>
+					<div className={css.overlayContent}>
+						<h1 className={css.mainTitle}>WebOs에서 펼쳐지는</h1>
+						<h1 className={css.mainTitle}>자유로운 Media 시청</h1>
+						<p className={css.subtitle}>
+							아카이브를 통해 취향에 맞는 영상을 추천받으세요.{' '}
+						</p>
+					</div>
 				</div>
-				<div className={css.netflixRow}>
-					<BodyText className={css.netflixRowTitle}>
-						{$L('Popular Content')}
-					</BodyText>
-					<VirtualGridList
-						dataSize={20}
-						itemRenderer={renderItem}
-						itemSize={450}
-						horizontalScrollbar="hidden"
-						direction="horizontal"
-					/>
-				</div>
-				<div className={css.netflixRow}>
-					<BodyText className={css.netflixRowTitle}>
-						{$L('Trending Now')}
-					</BodyText>
-					<VirtualGridList
-						dataSize={20}
-						itemRenderer={renderItem}
-						itemSize={450}
-						horizontalScrollbar="hidden"
-						direction="horizontal"
-					/>
-				</div>
-				<div className={css.netflixRow}>
-					<BodyText className={css.netflixRowTitle}>
-						{$L('Only on Netflix')}
-					</BodyText>
-					<VirtualGridList
-						dataSize={20}
-						itemRenderer={renderItem}
-						itemSize={450}
-						horizontalScrollbar="hidden"
-						direction="horizontal"
-					/>
+				<div
+					style={{
+						padding: '2.375rem',
+						paddingTop: '0.5rem'
+					}}
+				>
+					<h2>다양한 기능을 사용해보세요</h2>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							paddingBlockStart: '1rem'
+						}}
+					>
+						<StyledIconItem
+							icon="playcircle"
+							label="RECOMMEND"
+						></StyledIconItem>
+						<StyledIconItem
+							icon="list"
+							label="VIDEOS"
+						></StyledIconItem>
+						<StyledIconItem
+							icon="dashboard1"
+							label="STATUS"
+						></StyledIconItem>
+						<StyledIconItem
+							icon="profile"
+							label="MYPAGE"
+						></StyledIconItem>
+					</div>
 				</div>
 			</Scroller>
-
-			<Alert open={procStat.open} onClose={procStat.onClose}>
-				{$L('Process completed successfully!')}
-			</Alert>
 		</Panel>
 	);
 };

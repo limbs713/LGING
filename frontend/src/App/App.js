@@ -2,6 +2,7 @@ import {useState} from 'react';
 import ThemeDecorator from '@enact/sandstone/ThemeDecorator';
 import Panels from '@enact/sandstone/Panels';
 import Main from '../views/Main';
+import Video from '../views/Video';
 import {useBackHandler, useCloseHandler, useDocumentEvent} from './AppState';
 import {isDevServe} from '../libs/utils';
 
