@@ -27,26 +27,20 @@ public class CommentController {
     }
 
     @PostMapping("/{videoId}")
-    public ResponseEntity<String> addCommentOnVideo(@PathVariable Long videoId,
+    public ResponseEntity<Boolean> addCommentOnVideo(@PathVariable Long videoId,
                                                     @RequestBody RequestCommentDto commentDto) {
-        commentService.addCommentByVideo(videoId, commentDto);
-        return ResponseEntity.ok("Failed to add comment");
+        return ResponseEntity.ok(commentService.addCommentByVideo(videoId, commentDto));
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
-        if (commentService.deleteComment(commentId)) {
-            return ResponseEntity.ok("Comment deleted successfully");
-        }
-
-        return ResponseEntity.badRequest().body("Failed to delete comment");
+    public ResponseEntity<Boolean> deleteComment(@PathVariable Long commentId) {
+        return ResponseEntity.ok(commentService.deleteComment(commentId));
     }
 
     @PostMapping("/{userId}/{commentId}")
-    public ResponseEntity<String> updateComment(@PathVariable Long userId, @PathVariable Long commentId,
-                                                @RequestBody RequestCommentDto commentDto) {
-        commentService.updateComment(commentId, commentDto, userId);
-        return ResponseEntity.ok("Comment updated successfully");
+    public ResponseEntity<Comment> updateComment(@PathVariable Long userId, @PathVariable Long commentId,
+                                                 @RequestBody RequestCommentDto commentDto) {
+        return ResponseEntity.ok(commentService.updateComment(commentId, commentDto, userId));
 
     }
 
