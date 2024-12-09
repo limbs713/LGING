@@ -5,7 +5,6 @@ import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.user.application.UserService;
 import com.lge.connected.domain.user.dto.*;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
-import com.lge.connected.global.config.jwt.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +27,6 @@ public class UserController {
 
         return ResponseEntity.badRequest().body("User already exists");
     }
-
-
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
-//        if (userService.login(request)) {
-//            return ResponseEntity.ok("User logged in successfully");
-//        }
-//
-//        return ResponseEntity.badRequest().body("Invalid credentials");
-//    }
 
     // 추천 받기
     @GetMapping("/recommend/{userId}")
