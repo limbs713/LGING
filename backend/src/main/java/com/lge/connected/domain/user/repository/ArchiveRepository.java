@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ArchiveRepository extends JpaRepository<Archive, Long> {
 
-    @Query("SELECT a FROM Archive a WHERE a.user = :user ORDER BY a.updatedAt DESC")
+    @Query("SELECT a FROM Archive a WHERE a.user = :user ORDER BY a.updatedAt DESC LIMIT 3")
     List<Archive> findByUser(@Param("user") User user);
 
     boolean existsByUserAndUserGenre(User user, UserGenre userGenre);

@@ -39,6 +39,11 @@ public class ArchiveController {
         return ResponseEntity.ok(archiveService.getArchives(userId));
     }
 
+    @GetMapping("/{userId}/latest")
+    public ResponseEntity<ArchiveResponseDTO> getLatestArchive(@PathVariable Long userId){
+        return ResponseEntity.ok(archiveService.getLatestArchive(userId));
+    }
+
     @GetMapping("/history/{userId}/{archiveId}")
     public ResponseEntity<Long> toGetHistory(@PathVariable Long userId, @PathVariable Long archiveId) {
         return ResponseEntity.ok(archiveService.toGetHistory(userId, archiveId));

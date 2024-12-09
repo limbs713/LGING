@@ -26,8 +26,10 @@ public class VideoResponseDTO {
         return VideoResponseDTO.builder()
                 .videoId(video.getId())
                 .title(video.getTitle())
+                .subtitle(video.getSubtitle())
                 .source(video.getSource())
                 .thumbnail(video.getThumbnail())
+                .description(video.getDescription())
                 .build();
     }
 }

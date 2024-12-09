@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VideoRepository extends JpaRepository<Video, Long> {
-//    @Query("SELECT v FROM Venue v ORDER BY v.heartbeatNum DESC LIMIT 10")
-//    List<Venue> sortByHeartbeatCount();
+    @Query("SELECT v FROM Video v ORDER BY v.views DESC LIMIT 5")
+    List<Video> sortByViewCount();
 //
 //    @Query("SELECT v FROM Venue v WHERE v.venueId = :venueId")
 //    Long deleteByVenueId(@Param("venueId")Long venueId);

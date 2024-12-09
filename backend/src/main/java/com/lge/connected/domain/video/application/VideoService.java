@@ -2,6 +2,9 @@ package com.lge.connected.domain.video.application;
 
 import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.comment.repository.CommentRepository;
+import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.domain.user.exception.UserErrorCode;
+import com.lge.connected.domain.user.repository.UserRepository;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.domain.video.entity.Video;
 
@@ -29,6 +32,7 @@ public class VideoService {
     private final UserRepository userRepository;
     private final VideoHistoryRepository videoHistoryRepository;
 
+
     public List<VideoResponseDTO> getAllVideos() {
         return videoRepository.findAll().stream()
                 .map(video -> VideoResponseDTO.of(video))
@@ -48,6 +52,7 @@ public class VideoService {
         );
         return commentRepository.findAllByVideo(video);
     }
+
 
     public Boolean addHistory(Long videoId, Long userId, int timeStamp) {
         try {
@@ -85,6 +90,25 @@ public class VideoService {
                 () -> new IllegalArgumentException("해당 히스토리가 존재하지 않습니다.")
         );
     }
+
+
+    public List<VideoResponseDTO> getTop5ViewedVideos() {
+        List<Video> videos = videoRepository.sortByViewCount();
+        return videos.stream()
+                .map(VideoResponseDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public VideoResponseDTO addVideoViews(Long videoId) {
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new CustomException(VideoErrorCode.VIDEO_NOT_EXIST));
+        video.addViews();
+        videoRepository.save(video);
+        return VideoResponseDTO.of(video);
+    }
+
+
 
     public Boolean updateHistory(Long videoId, Long userId, Long historyId, int timeStamp) {
 
