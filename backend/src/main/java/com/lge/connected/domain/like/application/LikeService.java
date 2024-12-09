@@ -2,13 +2,20 @@ package com.lge.connected.domain.like.application;
 
 import com.lge.connected.domain.like.entity.Like;
 import com.lge.connected.domain.like.repository.LikeRepository;
+import com.lge.connected.domain.user.constant.Gender;
 import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.domain.user.exception.UserErrorCode;
 import com.lge.connected.domain.user.repository.UserRepository;
+import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.video.repository.VideoRepository;
+import com.lge.connected.global.util.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -52,5 +59,20 @@ public class LikeService {
         video.deleteLike();
         videoRepository.save(video);
         likeRepository.delete(like);
+    }
+
+    public List<VideoResponseDTO> getTargetGroupVideos(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+        int age = user.getAge();
+        Gender gender = user.getGender();
+
+        int minAge = (age / 10) * 10;
+        int maxAge = minAge + 9;
+
+        List<Video> videos = likeRepository.findMostLikedVideosByAgeAndGender(gender, minAge, maxAge);
+
+        return videos.stream()
+                .map(VideoResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }

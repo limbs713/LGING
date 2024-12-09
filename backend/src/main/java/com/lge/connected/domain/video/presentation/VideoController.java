@@ -6,11 +6,9 @@ import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.domain.video.dto.ResponseVideoDto;
 import com.lge.connected.domain.video.entity.Video;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +33,15 @@ public class VideoController {
     public ResponseEntity<List<Comment>> getAllComments(@PathVariable Long videoId){
         return ResponseEntity.ok(videoService.getAllComments(videoId));
     }
-  
+
+    @GetMapping("/view-top5")
+    public ResponseEntity<List<VideoResponseDTO>> getTop5ViewedVideos() {
+        return ResponseEntity.ok(videoService.getTop5ViewedVideos());
+    }
+
+    @PostMapping("/{videoId}/view")
+    public ResponseEntity<VideoResponseDTO> addVideoViews(@PathVariable Long videoId) {
+        return ResponseEntity.ok(videoService.addVideoViews(videoId));
+    }
    
 }

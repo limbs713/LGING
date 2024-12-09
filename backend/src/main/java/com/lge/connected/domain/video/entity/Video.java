@@ -66,5 +66,7 @@ public class Video extends BaseTimeEntity {
     public void deleteLike() {
         likes--;
     }
+
+    public void addViews() {views++;}
 }
 

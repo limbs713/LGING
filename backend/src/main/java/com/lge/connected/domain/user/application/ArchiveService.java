@@ -123,6 +123,18 @@ public class ArchiveService {
                 .collect(Collectors.toList());
     }
 
+    public ArchiveResponseDTO getLatestArchive(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+        Archive latestArchive = archiveRepository.findLatestArchiveByUser(user).orElseThrow(() -> new CustomException(ArchiveErrorCode.ARCHIVE_NOT_EXIST));
+        List<String> userGenreList = Vector.getTrueGenreElements(latestArchive.getUserGenre().getGenreVector());
+        return ArchiveResponseDTO.builder()
+                .preferenceList(userGenreList)
+                .userId(latestArchive.getUser().getId())
+                .archiveId(latestArchive.getArchiveId())
+                .updatedAt(latestArchive.getUpdatedAt())
+                .build();
+    }
+
     @Transactional
     public Long toGetHistory(Long userId, Long archiveId){
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
