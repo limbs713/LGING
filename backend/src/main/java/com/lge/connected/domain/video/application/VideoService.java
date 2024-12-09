@@ -11,12 +11,16 @@ import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.video.exception.VideoErrorCode;
 import com.lge.connected.domain.video.repository.VideoRepository;
 import com.lge.connected.global.util.CustomException;
+import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.domain.user.repository.UserRepository;
+import com.lge.connected.domain.video.entity.VideoHistory;
+import com.lge.connected.domain.video.repository.VideoHistoryRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -26,6 +30,8 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final VideoHistoryRepository videoHistoryRepository;
+
 
     public List<VideoResponseDTO> getAllVideos() {
         return videoRepository.findAll().stream()
@@ -47,22 +53,44 @@ public class VideoService {
         return commentRepository.findAllByVideo(video);
     }
 
-    @Transactional
-    public void addStar(int stars, Long videoId) {
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new CustomException(VideoErrorCode.VIDEO_NOT_EXIST));
-        video.addStars(stars);
-        videoRepository.save(video);
+
+    public Boolean addHistory(Long videoId, Long userId, int timeStamp) {
+        try {
+            Video video = videoRepository.findById(videoId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+            );
+
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+            );
+
+            VideoHistory history = VideoHistory.builder()
+                    .user(user)
+                    .video(video)
+                    .timestamp(timeStamp)
+                    .build();
+
+            videoHistoryRepository.save(history);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    @Transactional
-    public void changeStar(int prev, int curr, Long id) {
-        Video video = videoRepository.findById(id).orElseThrow(
-                () -> new CustomException(VideoErrorCode.VIDEO_NOT_EXIST)
+    public VideoHistory getHistory(Long videoId, Long userId) {
+        Video video = videoRepository.findById(videoId).orElseThrow(
+                () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
         );
-        video.changeStars(prev, curr);
-        videoRepository.save(video);
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+        );
+
+        return videoHistoryRepository.findByUserAndVideo(user, video).orElseThrow(
+                () -> new IllegalArgumentException("해당 히스토리가 존재하지 않습니다.")
+        );
     }
+
 
     public List<VideoResponseDTO> getTop5ViewedVideos() {
         List<Video> videos = videoRepository.sortByViewCount();
@@ -82,5 +110,49 @@ public class VideoService {
 
 
 
+    public Boolean updateHistory(Long videoId, Long userId, Long historyId, int timeStamp) {
 
+        try {
+
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+            );
+
+            VideoHistory videoHistory = videoHistoryRepository.findById(historyId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 시청 기록이 존재하지 않습니다.")
+            );
+
+            if (!videoHistory.getUser().equals(user)) {
+                throw new IllegalArgumentException("해당 시청 기록에 대한 권한이 없습니다.");
+            }
+
+            videoHistory.updateTimeStamp(timeStamp);
+
+            videoHistoryRepository.save(videoHistory);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Boolean deleteHistory(Long videoId, Long userId) {
+        try {
+            Video video = videoRepository.findById(videoId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+            );
+
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+            );
+
+            VideoHistory videoHistory = videoHistoryRepository.findByUserAndVideo(user, video).orElseThrow(
+                    () -> new IllegalArgumentException("해당 시청 기록이 존재하지 않습니다.")
+            );
+
+            videoHistoryRepository.delete(videoHistory);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

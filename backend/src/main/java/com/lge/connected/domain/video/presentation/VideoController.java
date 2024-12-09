@@ -3,15 +3,14 @@ package com.lge.connected.domain.video.presentation;
 import com.lge.connected.domain.comment.entity.Comment;
 import com.lge.connected.domain.video.application.VideoService;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
-import com.lge.connected.domain.video.dto.ResponseVideoDto;
 import com.lge.connected.domain.video.entity.Video;
+import com.lge.connected.domain.video.entity.VideoHistory;
+import com.lge.connected.global.config.jwt.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/v1/video")
@@ -43,5 +42,29 @@ public class VideoController {
     public ResponseEntity<VideoResponseDTO> addVideoViews(@PathVariable Long videoId) {
         return ResponseEntity.ok(videoService.addVideoViews(videoId));
     }
-   
+
+    @PostMapping("/{id}/history")
+    public ResponseEntity<Boolean> addHistory(@PathVariable Long id, @RequestBody int timeStamp) {
+        Long userId = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(videoService.addHistory(id, userId, timeStamp));
+    }
+
+    @DeleteMapping("/{id}/history")
+    public ResponseEntity<Boolean> deleteHistory(@PathVariable Long id) {
+        Long userId = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(videoService.deleteHistory(id, userId));
+    }
+
+    @PatchMapping("/{id}/history/{historyId}")
+    public ResponseEntity<Boolean> updateHistory(@PathVariable Long id, @PathVariable Long historyId, @RequestBody int timeStamp) {
+        Long userId = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(videoService.updateHistory(id, userId, historyId, timeStamp));
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<VideoHistory> getHistory(@PathVariable Long id) {
+        Long userId = SecurityUtils.getCurrentMemberId();
+        return ResponseEntity.ok(videoService.getHistory(id, userId));
+    }
+
 }

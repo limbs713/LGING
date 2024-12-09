@@ -24,22 +24,41 @@ public class BookmarkService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
     }
 
-    public void addBookmarkByVideoId(Long videoId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+    @Transactional
+    public Boolean addBookmarkByVideoId(Long videoId, Long userId) {
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다."));
+            Video video = videoRepository.findById(videoId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다."));
 
-        Bookmark bookmark = Bookmark.builder()
-                .video(video)
-                .user(user)
-                .build();
+            Bookmark bookmark = Bookmark.builder()
+                    .video(video)
+                    .user(user)
+                    .build();
 
-        bookmarkRepository.save(bookmark);
+            bookmarkRepository.save(bookmark);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public List<Bookmark> getAllBookmarkByUser(Long userId) {
         return bookmarkRepository.findAllByUserId(userId);
+    }
+
+    @Transactional
+    public Boolean deleteBookmarkByVideoId(Long videoId, Long userId) {
+        try {
+            Bookmark bookmark = bookmarkRepository.findByVideoIdAndUserId(videoId, userId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
+
+            bookmarkRepository.delete(bookmark);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

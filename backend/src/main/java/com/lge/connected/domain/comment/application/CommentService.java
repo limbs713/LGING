@@ -24,25 +24,37 @@ public class CommentService {
         return commentRepository.findAllByVideo(video);
     }
 
-    public void addCommentByVideo(Long videoId, RequestCommentDto commentDto) {
-        Comment comment = commentDto.toEntity();
-        Video video = videoRepository.findById(videoId).orElseThrow(
-                () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
-        );
-        video.addStars(comment.getRating());
-        commentRepository.save(comment);
-        videoRepository.save(video);
+    public Boolean addCommentByVideo(Long videoId, RequestCommentDto commentDto) {
+        try {
+            Comment comment = commentDto.toEntity();
+            Video video = videoRepository.findById(videoId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+            );
+            video.addStars(comment.getRating());
+            commentRepository.save(comment);
+            videoRepository.save(video);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean deleteComment(Long commentId) {
-        if (commentRepository.findById(commentId).isEmpty()) {
+        try {
+            Comment comment = commentRepository.findById(commentId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+            );
+            Video video = comment.getVideo();
+            video.minusStars(comment.getRating());
+            videoRepository.save(video);
+            commentRepository.deleteById(commentId);
+        } catch (Exception e) {
             return false;
         }
-        commentRepository.deleteById(commentId);
         return true;
     }
 
-    public void updateComment(Long commentId, RequestCommentDto commentDto, Long userId) {
+    public Comment updateComment(Long commentId, RequestCommentDto commentDto, Long userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
         );
@@ -52,7 +64,7 @@ public class CommentService {
             video.changeStars(comment.getRating(), commentDto.getRating());
             comment.update(commentDto);
             videoRepository.save(video);
-            commentRepository.save(comment);
+            return commentRepository.save(comment);
         } else {
             throw new IllegalArgumentException("해당 댓글을 수정할 권한이 없습니다.");
         }

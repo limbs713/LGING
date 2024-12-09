@@ -24,26 +24,57 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
-    public void addLikeByVideoId(Long videoId, Long userId) {
-        Video video = videoRepository.findById(videoId).orElseThrow(
-                () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
-        );
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
-        );
+    @Transactional
+    public Boolean addLikeByVideoId(Long videoId, Long userId) {
+        try {
+            Video video = videoRepository.findById(videoId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+            );
 
-        Like like = Like.builder()
-                .user(user)
-                .video(video)
-                .build();
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+            );
 
-        video.addLike();
-        videoRepository.save(video);
-        likeRepository.save(like);
+            Like like = Like.builder()
+                    .user(user)
+                    .video(video)
+                    .build();
+
+            video.addLike();
+            videoRepository.save(video);
+            likeRepository.save(like);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void deleteLikeByVideoId(Long videoId, Long userId) {
+    @Transactional
+    public Boolean deleteLikeByVideoId(Long videoId, Long userId) {
+        try {
+            Video video = videoRepository.findById(videoId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
+            );
+
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+            );
+
+            Like like = likeRepository.findByUserAndVideo(user, video).orElseThrow(
+                    () -> new IllegalArgumentException("해당 좋아요가 존재하지 않습니다.")
+            );
+
+            video.deleteLike();
+            videoRepository.save(video);
+            likeRepository.delete(like);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Like getLikeByVideoId(Long videoId, Long userId) {
         Video video = videoRepository.findById(videoId).orElseThrow(
                 () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
         );
@@ -51,14 +82,9 @@ public class LikeService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
         );
-
-        Like like = likeRepository.findByUserAndVideo(user, video).orElseThrow(
+        return likeRepository.findByUserAndVideo(user, video).orElseThrow(
                 () -> new IllegalArgumentException("해당 좋아요가 존재하지 않습니다.")
         );
-
-        video.deleteLike();
-        videoRepository.save(video);
-        likeRepository.delete(like);
     }
 
     public List<VideoResponseDTO> getTargetGroupVideos(Long userId) {
