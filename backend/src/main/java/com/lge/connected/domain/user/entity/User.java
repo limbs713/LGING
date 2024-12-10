@@ -30,7 +30,7 @@ public class User {
     private Long latestArchiveId;
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
 
     public void saveLatestArchiveId(Long latestArchiveId) {this.latestArchiveId = latestArchiveId;}
