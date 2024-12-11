@@ -20,7 +20,12 @@ public class BookmarkService {
     private final VideoRepository videoRepository;
 
     public Bookmark getBookmarkByVideoId(Long videoId, Long userId) {
-        return bookmarkRepository.findByVideoIdAndUserId(videoId, userId)
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다."));
+        return bookmarkRepository.findByVideoAndUser(video, user)
                 .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
     }
 
@@ -52,7 +57,13 @@ public class BookmarkService {
     @Transactional
     public Boolean deleteBookmarkByVideoId(Long videoId, Long userId) {
         try {
-            Bookmark bookmark = bookmarkRepository.findByVideoIdAndUserId(videoId, userId)
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+            Video video = videoRepository.findById(videoId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다."));
+
+            Bookmark bookmark = bookmarkRepository.findByVideoAndUser(video, user)
                     .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
 
             bookmarkRepository.delete(bookmark);

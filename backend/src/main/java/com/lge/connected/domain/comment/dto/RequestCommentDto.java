@@ -1,6 +1,8 @@
 package com.lge.connected.domain.comment.dto;
 
 import com.lge.connected.domain.comment.entity.Comment;
+import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.domain.video.entity.Video;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
@@ -19,10 +21,12 @@ public class RequestCommentDto {
     private int rating;
     private String content;
 
-    public Comment toEntity(){
+    public Comment toEntity(Video video, User user){
         return Comment.builder()
                 .rating(rating)
                 .content(content)
+                .user(user)
+                .video(video)
                 .build();
     }
 }

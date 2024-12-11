@@ -66,8 +66,8 @@ public class LikeService {
             );
 
             video.deleteLike();
-            videoRepository.save(video);
             likeRepository.delete(like);
+            videoRepository.save(video);
             return true;
         } catch (Exception e) {
             return false;

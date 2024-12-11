@@ -1,5 +1,6 @@
 package com.lge.connected.domain.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lge.connected.domain.comment.dto.RequestCommentDto;
 import com.lge.connected.domain.user.entity.User;
 import com.lge.connected.domain.video.entity.Video;
@@ -36,14 +37,17 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY   )
     @JoinColumn(name = "video_id")
+    @JsonIgnore
     private Video video;
 
     public void update(RequestCommentDto commentDto) {
         rating = commentDto.getRating();
         content = commentDto.getContent();
     }
+
 }

@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserInfoResponseDto {
+public class    UserInfoResponseDto {
     private Long id;
     private String username;
     private String gender;
     private int age;
+    private boolean isOnboarding;
 
     public static UserInfoResponseDto of(User user){
         return UserInfoResponseDto.builder()
@@ -22,6 +23,7 @@ public class UserInfoResponseDto {
                 .username(user.getUsername())
                 .gender(user.getGender().getText())
                 .age(user.getAge())
+                .isOnboarding(user.isOnboarding())
                 .build();
     }
 }

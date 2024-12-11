@@ -26,10 +26,10 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getAllCommentsByVideo(videoId));
     }
 
-    @PostMapping("/{videoId}")
-    public ResponseEntity<Boolean> addCommentOnVideo(@PathVariable Long videoId,
+    @PostMapping("/add/{videoId}/{userId}")
+    public ResponseEntity<Boolean> addCommentOnVideo(@PathVariable Long videoId, @PathVariable Long userId,
                                                     @RequestBody RequestCommentDto commentDto) {
-        return ResponseEntity.ok(commentService.addCommentByVideo(videoId, commentDto));
+        return ResponseEntity.ok(commentService.addCommentByVideo(videoId, userId, commentDto));
     }
 
     @DeleteMapping("/{commentId}")
@@ -37,7 +37,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.deleteComment(commentId));
     }
 
-    @PostMapping("/{userId}/{commentId}")
+    @PostMapping("/update/{userId}/{commentId}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long userId, @PathVariable Long commentId,
                                                  @RequestBody RequestCommentDto commentDto) {
         return ResponseEntity.ok(commentService.updateComment(commentId, commentDto, userId));

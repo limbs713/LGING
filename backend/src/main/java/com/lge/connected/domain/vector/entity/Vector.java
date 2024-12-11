@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class Vector {
     private static final List<String> ALL_GENRES = Arrays.asList(
-            "Action", "Comedy", "Drama", "SF", "Romance", "Thriller", "Horror", "Animation", "Crime", "Adventure", "War"
+            "Action", "Comedy", "Drama", "SF", "Romance", "Thriller", "Horror", "Animation", "Crime", "Adventure"
     );
 
     private final List<Double> elements;

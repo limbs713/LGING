@@ -18,23 +18,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookmarkController {
     private final BookmarkService bookmarkService;
 
-    @GetMapping("/{videoId}")
-    public ResponseEntity<Bookmark> getBookmarkByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
-        return ResponseEntity.ok(bookmarkService.getBookmarkByVideoId(videoId, userId));
+    @GetMapping("/{videoId}/{userId}")
+    public ResponseEntity<Bookmark> getBookmarkByVideoId(@PathVariable Long videoId, @PathVariable Long userId) {
+        try {
+            return ResponseEntity.ok(bookmarkService.getBookmarkByVideoId(videoId, userId));
+        }
+        catch (Exception e) {
+            return ResponseEntity.ok(null);
+        }
     }
 
-    @PostMapping("/{videoId}")
-    public ResponseEntity<Boolean> addBookmarkByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
-        bookmarkService.addBookmarkByVideoId(videoId, userId);
+    @PostMapping("/{videoId}/{userId}")
+    public ResponseEntity<Boolean> addBookmarkByVideoId(@PathVariable Long videoId, @PathVariable Long userId) {
         return ResponseEntity.ok(bookmarkService.addBookmarkByVideoId(videoId, userId));
     }
 
-    @DeleteMapping("/{videoId}")
-    public ResponseEntity<Boolean> deleteBookmarkByVideoId(@PathVariable Long videoId) {
-        Long userId = SecurityUtils.getCurrentMemberId();
-        bookmarkService.deleteBookmarkByVideoId(videoId, userId);
+    @DeleteMapping("/{videoId}/{userId}")
+    public ResponseEntity<Boolean> deleteBookmarkByVideoId(@PathVariable Long videoId, @PathVariable Long userId) {
         return ResponseEntity.ok(bookmarkService.deleteBookmarkByVideoId(videoId, userId));
     }
 

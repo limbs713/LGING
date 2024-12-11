@@ -5,6 +5,7 @@ import com.lge.connected.domain.comment.repository.CommentRepository;
 import com.lge.connected.domain.user.entity.User;
 import com.lge.connected.domain.user.exception.UserErrorCode;
 import com.lge.connected.domain.user.repository.UserRepository;
+import com.lge.connected.domain.video.dto.VideoInfoDto;
 import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.domain.video.entity.Video;
 
@@ -39,11 +40,13 @@ public class VideoService {
                 .collect(Collectors.toList());
     }
 
-    public Video getVideoInfo(Long id){
-        return videoRepository.findById(id).orElseThrow(
+    public VideoInfoDto getVideoInfo(Long id){
+        Video video = videoRepository.findById(id).orElseThrow(
                 () -> new CustomException(VideoErrorCode.VIDEO_NOT_EXIST)
 
         );
+
+        return VideoInfoDto.from(video);
     }
 
     public List<Comment> getAllComments(Long id) {

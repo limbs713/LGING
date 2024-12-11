@@ -34,10 +34,10 @@ public class Video extends BaseTimeEntity {
     @Builder.Default
     private Integer comments = 0;
 
-    @OneToOne(mappedBy = "video")
+    @OneToOne(mappedBy = "video", fetch = FetchType.LAZY)
     private VideoGenre videoGenre;
 
-    public void addStars(int target) {
+    public void addStars(long target) {
         if (comments.equals(0)) {
             stars = (float) target;
         } else {
@@ -46,7 +46,7 @@ public class Video extends BaseTimeEntity {
         comments++;
     }
 
-    public void minusStars(int target) {
+    public void minusStars(long target) {
         if (comments.equals(1)) {
             stars = 0f;
         } else {

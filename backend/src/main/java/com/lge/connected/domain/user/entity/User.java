@@ -29,6 +29,9 @@ public class User {
     private String role;
     private Long latestArchiveId;
 
+    @Builder.Default
+    private boolean isOnboarding = false;
+
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 

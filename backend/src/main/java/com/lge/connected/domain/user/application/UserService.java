@@ -68,16 +68,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-
-//    public boolean login(UserLoginRequest request) {
-//        User user = request.toEntity();
-//        User found_user = userRepository.findByLoginId(user.getLoginId()).orElseThrow(
-//                () -> new IllegalArgumentException("User not found")
-//        );
-//
-//        return user.getPassword().equals(found_user.getPassword());
-//    }
-
     @Transactional
     public List<VideoResponseDTO> recommendVideos(Long userId, Long num) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
@@ -199,4 +189,9 @@ public class UserService implements UserDetailsService {
         return videos.stream().map(VideoResponseDTO::of).collect(Collectors.toList());
     }
 
+    public boolean getOnboarding(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST))
+                .isOnboarding();
+    }
 }

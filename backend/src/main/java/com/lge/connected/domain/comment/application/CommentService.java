@@ -14,17 +14,20 @@ import java.util.stream.Collectors;
 
 import com.lge.connected.global.util.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<Comment> getAllCommentsByVideo(Long videoId) {
         Video video = videoRepository.findById(videoId).orElseThrow(
                 () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
@@ -32,23 +35,27 @@ public class CommentService {
         return commentRepository.findAllByVideo(video);
     }
 
-    @Transactional
-    public Boolean addCommentByVideo(Long videoId, RequestCommentDto commentDto) {
+    public Boolean addCommentByVideo(Long videoId, Long userId, RequestCommentDto commentDto) {
         try {
-            Comment comment = commentDto.toEntity();
             Video video = videoRepository.findById(videoId).orElseThrow(
                     () -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다.")
             );
+
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+            );
+            Comment comment = commentDto.toEntity(video, user);
+
             video.addStars(comment.getRating());
             commentRepository.save(comment);
             videoRepository.save(video);
             return true;
         } catch (Exception e) {
+            log.error(e.getStackTrace().toString());
             return false;
         }
     }
 
-    @Transactional
     public boolean deleteComment(Long commentId) {
         try {
             Comment comment = commentRepository.findById(commentId).orElseThrow(
@@ -64,7 +71,6 @@ public class CommentService {
         return true;
     }
 
-    @Transactional
     public Comment updateComment(Long commentId, RequestCommentDto commentDto, Long userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")

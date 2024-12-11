@@ -19,13 +19,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody UserSignupRequest request) {
-        System.out.println("Signup request: " + request);
+    public ResponseEntity<Boolean> signup(@RequestBody UserSignupRequest request) {
         if (userService.signup(request)>0) {
-            return ResponseEntity.ok("User signed up successfully");
+            return ResponseEntity.ok(true);
         }
 
-        return ResponseEntity.badRequest().body("User already exists");
+        return ResponseEntity.ok(false);
     }
 
     // 추천 받기
@@ -49,6 +48,11 @@ public class UserController {
     @GetMapping("/{userId}/comments")
     public ResponseEntity<List<Comment>>getAllComments(@PathVariable Long userId){
         return ResponseEntity.ok(userService.getAllComments(userId));
+    }
+
+    @GetMapping("/{userId}/onboarding")
+    public ResponseEntity<Boolean> getOnboarding(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.getOnboarding(userId));
     }
 
 
