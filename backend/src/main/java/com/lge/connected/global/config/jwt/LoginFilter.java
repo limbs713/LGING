@@ -3,10 +3,6 @@ package com.lge.connected.global.config.jwt;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lge.connected.domain.user.dto.LoginResponseDTO;
-import com.lge.connected.domain.user.entity.User;
-import com.lge.connected.domain.user.exception.UserErrorCode;
-import com.lge.connected.domain.user.repository.UserRepository;
-import com.lge.connected.global.util.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,16 +22,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper(); // JSON 파서를 위한 ObjectMapper
+        private final ObjectMapper objectMapper = new ObjectMapper(); // JSON 파서를 위한 ObjectMapper
 
 
     // loginId를 요청에서 추출하는 메서드 추가
@@ -77,11 +70,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
     @Override
-    @Transactional(readOnly = true)
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        User user = userRepository.findByLoginId(customUserDetails.getLoginId()).orElseThrow(()->new CustomException(UserErrorCode.USER_NOT_EXIST));
 
         String loginId = customUserDetails.getLoginId();
 
@@ -96,8 +87,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addHeader("Authorization", "Bearer " + token);
         // 필요한 회원 정보만 포함하도록 LoginResponseDTO 객체 생성
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO(
+                customUserDetails.getUserId(),
                 customUserDetails.getLoginId(),
-                customUserDetails.getUsername(),
                 token
         );
 

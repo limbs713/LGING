@@ -36,3 +36,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+backend/node_modules/slug/..gitignore.un~
+
+backend/node_modules/slug/..kateproject.un~
+
+backend/node_modules/slug/..travis.yml.un~
+
+backend/node_modules/slug/.LICENSE.un~
+
+backend/node_modules/slug/.package.json.un~

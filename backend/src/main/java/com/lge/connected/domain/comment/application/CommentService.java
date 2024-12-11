@@ -32,6 +32,7 @@ public class CommentService {
         return commentRepository.findAllByVideo(video);
     }
 
+    @Transactional
     public Boolean addCommentByVideo(Long videoId, RequestCommentDto commentDto) {
         try {
             Comment comment = commentDto.toEntity();
@@ -47,6 +48,7 @@ public class CommentService {
         }
     }
 
+    @Transactional
     public boolean deleteComment(Long commentId) {
         try {
             Comment comment = commentRepository.findById(commentId).orElseThrow(
@@ -62,6 +64,7 @@ public class CommentService {
         return true;
     }
 
+    @Transactional
     public Comment updateComment(Long commentId, RequestCommentDto commentDto, Long userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
