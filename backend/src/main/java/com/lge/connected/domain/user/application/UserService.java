@@ -189,5 +189,11 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
+    public List<VideoResponseDTO> getLikedVideos(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+        List<Video> videos = likeRepository.findLikedVideosByUser(user);
+
+        return videos.stream().map(VideoResponseDTO::of).collect(Collectors.toList());
+    }
 
 }

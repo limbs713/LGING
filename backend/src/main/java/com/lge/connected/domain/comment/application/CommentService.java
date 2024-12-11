@@ -2,10 +2,17 @@ package com.lge.connected.domain.comment.application;
 
 import com.lge.connected.domain.comment.dto.RequestCommentDto;
 import com.lge.connected.domain.comment.entity.Comment;
+import com.lge.connected.domain.user.entity.User;
+import com.lge.connected.domain.user.exception.UserErrorCode;
+import com.lge.connected.domain.user.repository.UserRepository;
+import com.lge.connected.domain.video.dto.VideoResponseDTO;
 import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.comment.repository.CommentRepository;
 import com.lge.connected.domain.video.repository.VideoRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.lge.connected.global.util.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final VideoRepository videoRepository;
+    private final UserRepository userRepository;
 
     public List<Comment> getAllCommentsByVideo(Long videoId) {
         Video video = videoRepository.findById(videoId).orElseThrow(

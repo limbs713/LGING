@@ -23,4 +23,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("SELECT l.video FROM Like l WHERE l.user.gender = :gender AND l.user.age BETWEEN :minAge AND :maxAge GROUP BY l.video ORDER BY COUNT(l.video) DESC LIMIT 5")
     List<Video> findMostLikedVideosByAgeAndGender(@Param("gender") Gender gender, @Param("minAge") int minAge, @Param("maxAge") int maxAge);
 
+    @Query("SELECT l.video FROM Like l WHERE l.user = :user ORDER BY l.updatedAt DESC")
+    List<Video> findLikedVideosByUser(@Param("user") User user);
 }

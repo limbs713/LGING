@@ -63,9 +63,14 @@ public class UserController {
     }
 
 
-    @GetMapping("/{userId}/bookmark")
+    @GetMapping("/{userId}/bookmarks")
     public ResponseEntity<List<Bookmark>> getAllBookmarkByUser(@PathVariable Long userId){
         return ResponseEntity.ok(userService.getAllBookmarkByUser(userId));
+    }
+
+    @GetMapping("/{userId}/likes")
+    public ResponseEntity<List<VideoResponseDTO>> getLikedVideos(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getLikedVideos(userId));
     }
 
 
