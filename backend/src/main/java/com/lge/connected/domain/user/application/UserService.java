@@ -149,8 +149,11 @@ public class UserService implements UserDetailsService {
         return commentRepository.findByUserId(id);
     }
 
-    public List<Bookmark> getAllBookmarkByUser(Long userId) {
-        return bookmarkRepository.findAllByUserId(userId);
+    public List<VideoResponseDTO> getAllBookmarkByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
+        List<Video> bookmarkedVideos = bookmarkRepository.findBookmarkedVideosByUser(user);
+        return bookmarkedVideos.stream().map(VideoResponseDTO::of).collect(Collectors.toList());
     }
 
 

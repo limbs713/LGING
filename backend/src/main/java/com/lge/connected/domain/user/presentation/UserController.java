@@ -53,7 +53,7 @@ public class UserController {
 
 
     @GetMapping("/{userId}/bookmarks")
-    public ResponseEntity<List<Bookmark>> getAllBookmarkByUser(@PathVariable Long userId){
+    public ResponseEntity<List<VideoResponseDTO>> getAllBookmarkByUser(@PathVariable Long userId){
         return ResponseEntity.ok(userService.getAllBookmarkByUser(userId));
     }
 
