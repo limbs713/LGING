@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,6 +41,7 @@ public class User {
         this.username = username;
         this.nickname = nickname;
         this.gender = Gender.fromText(gender);
+        this.isOnboarding = true;
         this.age = age;
     }
 }
