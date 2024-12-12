@@ -12,8 +12,6 @@ import com.lge.connected.domain.video.entity.Video;
 import com.lge.connected.domain.video.exception.VideoErrorCode;
 import com.lge.connected.domain.video.repository.VideoRepository;
 import com.lge.connected.global.util.CustomException;
-import com.lge.connected.domain.user.entity.User;
-import com.lge.connected.domain.user.repository.UserRepository;
 import com.lge.connected.domain.video.entity.VideoHistory;
 import com.lge.connected.domain.video.repository.VideoHistoryRepository;
 import java.util.List;
@@ -56,7 +54,7 @@ public class VideoService {
         return commentRepository.findAllByVideo(video);
     }
 
-
+    @Transactional
     public Boolean addHistory(Long videoId, Long userId, int timeStamp) {
         try {
             Video video = videoRepository.findById(videoId).orElseThrow(
@@ -112,7 +110,7 @@ public class VideoService {
     }
 
 
-
+    @Transactional
     public Boolean updateHistory(Long videoId, Long userId, Long historyId, int timeStamp) {
 
         try {
@@ -138,6 +136,7 @@ public class VideoService {
         }
     }
 
+    @Transactional
     public Boolean deleteHistory(Long videoId, Long userId) {
         try {
             Video video = videoRepository.findById(videoId).orElseThrow(

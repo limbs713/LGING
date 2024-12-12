@@ -27,7 +27,7 @@ public class UserGenreService {
     @Transactional
     public UserVectorResponseDTO addGenreVector(Long userId, Map<String, Double> genres) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_EXIST));
-        Vector preferenceVector = Vector.fromGenres(genres);
+        Vector preferenceVector = Vector.fromGenres(genres);    // Vector.fromGenres() is from Vector.java
 
         if (Vector.getTrueGenreElements(preferenceVector).size()>4){
             throw new CustomException(UserGenreErrorCode.USER_GENRE_MAX_LIMIT);
