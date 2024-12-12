@@ -42,7 +42,7 @@
 
 ### 2.1 시스템 컨텍스트 (System Context)
 
-<img src="https://github.com/user-attachments/assets/a5f6e662-a99d-42fb-9c3c-b6266f5978a9">
+![image](https://github.com/user-attachments/assets/917bab4e-9ab3-4ba3-9728-a40da41c2895)
 
 **User**
 
@@ -243,13 +243,13 @@
 - `Before Login` 상태에서 Login 을 통해 `After Login`상태가 될 수 있다. Login 시 입력받은 ID와 password가 모두 일치해야 Login 상태가 될 수 있다. ID가 DB에 없거나 password가 불일치할 경우 Login은 성사되지 않는다.
 - `After Login` 상태에서는 Logout을 통해 `Before Login` 상태로 되돌아간다.
 
-![StateDiagram.drawio (3).png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/87102540-6790-4755-aa53-5973c72ffbfd/StateDiagram.drawio_(3).png)
+![image](https://github.com/user-attachments/assets/a37bfbe1-f64b-416d-bd6e-460ec6c23b12)
 
 ### 4.2.2 Sequence diagram
 
 클라이언트의 request에 따라 서버가 응답하고 DB에 접근하여 데이터를 처리할 때 수행되는 로직이다.
 
-![SequenceDiagram.drawio (1).png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/40abc30c-3fad-4bd6-aebf-65b105657307/SequenceDiagram.drawio_(1).png)
+![image](https://github.com/user-attachments/assets/ebec4218-8d65-4cc5-bb2b-d352c0ffe5ed)
 
 - 클라이언트는 프론트엔드의 UI를 통해 interface를 마주하고, 이를 매개로 백엔드에게 요청을 전송한다.
 - 백엔드는 프론트엔드를 통해 받은 클라이언트의 요청을 데이터베이스에 접근하여 처리한다.
@@ -261,25 +261,24 @@
 1. Signup
     - 클라이언트로부터 사용자의 정보를 입력받아 새로운 계정을 생성하고 이를 DB에 저장한다.
     
-    ![StateDiagram.drawio.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/750bb5a4-3086-4635-b26b-334f77e47b50/StateDiagram.drawio.png)
+    ![image](https://github.com/user-attachments/assets/657f41f9-bc18-43c6-89eb-2ed3d149f04a)
     
 2. Login
     - 클라이언트로부터 loginID와 password를 입력받아 사용자에게 인가 여부를 판단하는 로그인을 진행한다.
     - 로그인에 성공하면 서버의 유저의 상태를 업데이트한다.
-    
-    ![StateDiagram2.drawio.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/6391bb77-b1fa-492c-a8c7-ff51f3043462/StateDiagram2.drawio.png)
+    ![image](https://github.com/user-attachments/assets/a82d78ca-b64f-4c1b-9ff7-6b7d1efd7deb)
     
 3. Get video list
     - 사용자가 비디오 리스트(bookmarked, liked, comment…)를 요청하면 서버로부터 해당되는 비디오 리스트를 받아온다.
     
-    ![StateDiagram.drawio (2).png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/2419a77f-f5ca-4e46-95a2-01fd8563c661/StateDiagram.drawio_(2).png)
+    ![image](https://github.com/user-attachments/assets/5ca13228-66a4-4d20-ba6d-f4b7fdb71410)
     
 4. Play video
     - 클라이언트가 재생하고자 하는 동영상을 선택하면 백엔드에서 해당 동영상의 정보를 마지막 재생 시점을 포함하여 DB에서 가져온다.
     - 선택된 동영상의 조회수 및 사용자의 최근 시청 기록을 변경한다.
     - 마지막 시청 시점부터 동영상을 재생하고, 클라이언트가 종료하면 마지막 시청 시점을 다시 변경한다.
     
-    ![StateDiagram.drawio (1).png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/f60590b8-b4da-4413-b60c-08abe3d6cb56/StateDiagram.drawio_(1).png)
+    ![image](https://github.com/user-attachments/assets/ffb5a6be-1105-41a6-bed7-6283bc01ebea)
     
 5. Logout
     - 로그인이 되어 있던 상태에서 로그인이 되기 전 상태로 되돌아간다.
