@@ -12,9 +12,9 @@ import Item from '@enact/sandstone/Item';
 import VirtualGridList from '@enact/sandstone/VirtualList';
 import ImageItem from '@enact/sandstone/ImageItem';
 import MediaOverlay from '@enact/sandstone/MediaOverlay';
-const Main = props => {
-	const {openPopup} = usePopup();
-	const {procStat = {open: false, onClose: () => {}}} = useProcStat();
+import IconItem from '@enact/sandstone/IconItem';
+import styled from 'styled-components';
+import {useNavigate} from 'react-router-dom';
 
 	const handlePlayClick = () => {
 		openPopup('play');
@@ -34,11 +34,25 @@ const Main = props => {
 
     
 
+	& .enact_sandstone_IconItem_IconItem_label {
+		font-size: 1.25rem;
+	}
+
+	& .enact_sandstone_IconItem_IconItem_iconItem {
+		padding-block-end: 10px;
+	}
+`;
+
+const Main = props => {
+	const navigate = useNavigate();
 	return (
-		<Panel {...props} className={css.netflixBackground}>
-			<Header type="compact" css={{header: 'LuckyVickiLogo'}} title="LG OTT" />
-			<Scroller>
-				<div className={css.bannerWrapper}>
+		<Panel {...props} className={css.homeBackground}>
+			<Scroller className={css.centeredScroller} verticalScrollbar="hidden">
+				<div>
+					<CustomHeader
+						type="compact"
+						title="LGING"
+					/>
 					<MediaOverlay
 						className={css.fullScreenOverlay}
 						css={{
@@ -57,17 +71,41 @@ const Main = props => {
 						/>
 					</MediaOverlay>
 				</div>
-				<div className={css.netflixRow}>
-					<BodyText className={css.netflixRowTitle}>
-						{$L('Popular Content')}
-					</BodyText>
-					<VirtualGridList
-						dataSize={20}
-						itemRenderer={renderItem}
-						itemSize={450}
-						horizontalScrollbar="hidden"
-						direction="horizontal"
-					/>
+				<div
+					style={{
+						padding: '2.375rem',
+						paddingTop: '0.5rem'
+					}}
+				>
+					<h2>다양한 기능을 사용해보세요</h2>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							paddingBlockStart: '1rem'
+						}}
+					>
+						<StyledIconItem
+							icon="playcircle"
+							label="RECOMMEND"
+							onClick={() => navigate('/recommend')}
+						></StyledIconItem>
+						<StyledIconItem
+							icon="list"
+							label="VIDEOS"
+							onClick={() => navigate('/videos')}
+						></StyledIconItem>
+						<StyledIconItem
+							icon="dashboard1"
+							label="STATUS"
+							onClick={() => navigate('/status')}
+						></StyledIconItem>
+						<StyledIconItem
+							icon="profile"
+							label="MYPAGE"
+							onClick={() => navigate('/mypage')}
+						></StyledIconItem>
+					</div>
 				</div>
 				<div className={css.netflixRow}>
 					<BodyText className={css.netflixRowTitle}>

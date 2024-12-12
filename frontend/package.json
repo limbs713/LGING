@@ -45,12 +45,18 @@
 		"@enact/spotlight": "^4.7.0",
 		"@enact/ui": "^4.7.0",
 		"@enact/webos": "^4.7.0",
+		"axios": "^1.5.0",
+		"http-proxy-middleware": "^2.0.6",
 		"ilib": "^14.17.0",
 		"prop-types": "^15.8.1",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-chartjs-2": "^5.2.0",
+		"react-dom": "^18.2.0",
+		"react-router-dom": "^6.19.0",
+		"styled-components": "^6.1.13"
 	},
 	"devDependencies": {
+		"babel-engine-plugin": "^0.3.0",
 		"eslint-config-enact-proxy": "^1.0.5",
 		"husky": "^4.3.8",
 		"lint-staged": "^12.1.7",
