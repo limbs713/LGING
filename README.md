@@ -102,8 +102,6 @@
 
 **3.1.2 로그인 이후**
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/2b65a2ae-a6f5-4469-bd80-1fb56cec27d8/Untitled.png)
-
 1. `FR03` Home 탭 
     - `FR03-1` 사용자가 로그인 한 직후, 홈 화면에 재생 가능한 미디어 목록을 전부 나열한다.
         - `FR03-1-1` 나열된 미디어들은 썸네일 이미지, 제목의 정보가 같이 보이도록 한다.
@@ -210,17 +208,17 @@
 - `FR04`: Videos component
     - loadVideos(): 데이터베이스에 존재하는 모든 동영상 목록을 조회한다.
 - `FR05`: Login component
-    - 
+  
 - `FR06`: Main component
-    - 
+ 
 - `FR07`: Onboarding component
-    - 
+ 
 - `FR08`: Signup component
-    - 
+ 
 - `FR09`: UserState component
-    - 
+ 
 - `FR10`: Video component
-    - 
+   
 
 ### 4.1.2 Backend architecture
 
@@ -433,8 +431,6 @@
 
 ## Frontend
 
--
-
 - **비디오 플레이어 탭 구현: `TabLayout` 활용**
     - **결정 이유**:
         - **사용자 경험 향상**: 별도의 화면으로 이동하지 않고 탭 내에서 직접 영상을 재생하여 편의성을 높임
@@ -476,7 +472,7 @@
     - 비디오 장르 벡터와 사용자 취향 장르 벡터 간 코사인 유사도를 계산하여 유사도가 높은 순으로 상위 5개의 비디오를 추천
         - 왜 코사인 유사도? → 코사인 함수의 특성으로 인해 -1~1 사이의 값만을 가짐 + 두 벡터 간 유사한 정도를 수치로 나타내기에 적합
         
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/95bf7677-cd9f-4b3c-a632-70d96ef3dd32/image.png)
+        ![image](https://github.com/user-attachments/assets/b2ae348a-0f4c-4ea9-8415-256a1f2d2a70)
         
     - **벡터 요소 가중치:** 사용자가 추후에 평점을 남기면, 그 평점을 남긴 영화 장르에 대해 +,- 가중치를 더함
     - **가중치 산정방법:** 1~5점 범위의 별점에서 2.5를 뺀 다음 2.5로 나누어 정규화 → 낮은 별점에 대해서는 선호도 (-), 높은 별점에 대해서는 선호도 (+)를 적용하기 위해
@@ -495,7 +491,7 @@
 - **디렉토리 구조 - “도메인형 패키지 구조”**
     
     
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d9e57111-5c03-4370-9bbb-31fa96224c8d/adba2f5f-4c59-47a1-9a71-d3bc5c20c6a0/image.png)
+    ![image](https://github.com/user-attachments/assets/a0694d96-117f-49f5-ad3d-089239e6c795)
     
     - **도메인 기반으로 코드 가독성 향상**
         - 기능별로 디렉토리를 나누는 대신 도메인(예: `user`, `video`, `bookmark`) 중심으로 구조화하면 코드의 목적과 맥락이 명확해짐
