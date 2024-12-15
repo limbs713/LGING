@@ -46,12 +46,10 @@ const Main = props => {
 				<div>
 					<CustomHeader type="compact" title="LGING" />
 					<MediaOverlay
-						className={css.fullScreenOverlay}
+						className={`${css.fullScreenOverlay} ${css.mediaOverlay}`}
 						css={{
-							image: css.bannerVideo,
-							textLayout: css.bannerText
+							image: css.bannerVideo
 						}}
-						text="다양한 영상을 추천받으세요.\n당신의 취향대로"
 						mediaComponent="video"
 						loop
 						noAutoPlay={false}
@@ -60,8 +58,17 @@ const Main = props => {
 						<source
 							src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 							type="video/mp4"
+							height="150"
+							width="50"
 						/>
 					</MediaOverlay>
+					<div className={css.overlayContent}>
+						<h1 className={css.mainTitle}>WebOs에서 펼쳐지는</h1>
+						<h1 className={css.mainTitle}>자유로운 Media 시청</h1>
+						<p className={css.subtitle}>
+							아카이브를 통해 취향에 맞는 영상을 추천받으세요.{' '}
+						</p>
+					</div>
 				</div>
 				<div
 					style={{
