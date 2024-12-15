@@ -12,9 +12,9 @@
 - 미디어 재생에서 발생한 사용자 로그 및 미디어 데이터를 서버로 전송한다.
 - 사용자 선호도에 따른 비디오 추천 시스템을 제공한다.
 - 시스템 리소스 상태(예: CPU, 메모리 사용량)를 모니터링한다.
-- Adaptive Streaming을 통해 다양한 미디어 포맷을 지원한다.
 - webOS 기반의 TV에서 작동하는 User Interface를 구현한다.
-- 수집한 미디어 데이터 시각화를 통계해 모니터링한다.
+- 사용자의 좋아요와 북마크를 관리한다.
+
 
 ### 1.3 용어 및 약어 정리 (Definitions and Abbreviations)
 
@@ -27,9 +27,7 @@
 - Spring boot : Java 기반의 애플리케이션 개발을 간소화하기 위한 프레임워크이다. 복잡한 설정 없이 빠르게 애플리케이션을 개발할 수 있도록 자동 설정, 내장 서버, 스타터 의존성 등을 제공한다. 마이크로서비스 아키텍처와 RESTful API 개발에 적합하며 생산성과 확장성을 동시에 지원한다.
 - React: 사용자 인터페이스를 구축하기 위한 JavaScript 라이브러리이다. 컴포넌트 기반의 접근 방식을 통해 효율적인 UI 개발을 가능하게 한다.
 - Enact: 대형 화면 기기를 위한 사용자 인터페이스 개발에 특화된 React 기반의 응용 프로그램 프레임워크이다. 성능 최적화, 접근성, 국제화를 포함한 다양한 기능을 갖추고 있으며, webOS 플랫폼과의 호환성에 중점을 둔다.
-- Redux: JavaScript 앱의 상태 관리를 위한 라이브러리이다. 애플리케이션의 상태를 중앙 집중식 저장소에서 관리하여 일관된 동작과 쉬운 상태 관리를 가능하게 한다.
 - MySQL : 오픈 소스 관계형 데이터베이스 관리 시스템(RDBMS)이다. 구조화된 데이터를 테이블 형식으로 저장하며 SQL(Structured Query Language)을 사용해 데이터를 쉽게 관리하고 검색할 수 있다.
-- HLS: Apple Inc.에 의해 개발된 비디오 스트리밍 프로토콜이다. 적응형 스트리밍을 지원하여 다양한 네트워크 속도와 장치에서 안정적인 스트리밍을 제공한다. HLS는 m3u8 재생 목록 파일을 통해 콘텐츠를 전달한다.
 - Luna Service API: webOS TV에서 제공하는 핵심 서비스와 기능을 포함하는 API로, webOS 시스템 서비스와의 통신을 가능하게 해준다. Luna Service API를 통해 다양한 시스템 기능에 액세스하고, 사용자 정의 기능을 webOS에 통합할 수 있다.
 
 ***
@@ -42,7 +40,7 @@
 
 ### 2.1 시스템 컨텍스트 (System Context)
 
-![image](https://github.com/user-attachments/assets/917bab4e-9ab3-4ba3-9728-a40da41c2895)
+![image](https://github.com/user-attachments/assets/18f2132c-7cc5-4139-9dd9-64fdc6f24aab)
 
 **User**
 
@@ -77,50 +75,37 @@
 
 **3.1.2 로그인 이후**
 
-1. `FR03` Home 탭 
-    - `FR03-1` 사용자가 로그인 한 직후, 홈 화면에 재생 가능한 미디어 목록을 전부 나열한다.
+1. `FR03` Videos 탭 
+    - `FR03-1` 재생 가능한 미디어 목록을 전부 나열한다.
         - `FR03-1-1` 나열된 미디어들은 썸네일 이미지, 제목의 정보가 같이 보이도록 한다.
-        - `FR03-1-2` 미디어 썸네일을 클릭하면 HLS 스트리밍이 가능한 미디어는 HLS Video Player로, 아닌 미디어는 기본 Video Player로 넘어가 동영상이 재생된다.
+          ![image](https://github.com/user-attachments/assets/8f4da207-94f5-4908-a808-98fcdc6503ab)
     - `FR03-2` 기본 Video Player이다.
         - `FR03-2-1` 해당 영상의 시청 기록이 존재한다면 팝업으로 마지막으로 시청한 시간부터 이어 볼 것인 지 팝업을 표시한다
             - `FR03-2-1-1` 처음으로 버튼을 누르면 영상을 처음부터 재생한다.
+              ![image](https://github.com/user-attachments/assets/368afe52-f088-4abb-91cc-6b42234eb760)
             - `FR03-2-1-2` 이어보기 버튼을 누르면 영상을 마지막 시청 시간부터 재생한다.
-        - `FR03-2-2` 미디어 하단의 첫 번째 버튼을 누르면 이전 페이지로 돌아간다.
-        - `FR03-2-3` 미디어 하단의 두 번째 버튼을 누르면 해당 영상에 좋아요을 추가할 수 있다.
-            - `FR03-2-3-1` 빈 하트를 누르면 좋아요가 추가된다.
-            - `FR03-2-3-2` 활성화된 하트를 누르면 하트가 빈 하트로 변경되며 좋아요가 삭제된다.
-        - `FR03-2-4` 미디어 재생 중 세 번째 버튼을 누르면 해당 영상에 북마크를 추가할 수 있다.
-            - `FR03-2-4-1` 빈 별을 누르면 북마크가 추가된다.
-            - `FR03-2-4-2`  활성화된 별을 누르면 빈 별로 변경되며 북마크가 삭제된다.
-        - `FR03-2-5` 미디어 재생 중 네 번째 버튼을 누르면 해당 영상의 재생 속도를 조절할 수 있다.
-        - `FR03-2-6` 미디어 재생 중 다섯 번째 버튼은 해당 영상에 대한 댓글을 볼 수 있다.
+        - `FR03-2-2` 미디어 재생 중 첫 번째 버튼은 해당 영상에 대한 댓글을 볼 수 있다.
+          ![image](https://github.com/user-attachments/assets/2e01b346-f20f-4a42-8d46-c08027f16d0d)
             - `FR03-2-6-1` 1부터 5까지의 별점을 부여할 수 있다.
             - `FR03-2-6-2` 댓글 내용을 작성할 수 있다.
             - `FR03-2-6-3` 작성 버튼을 누르면 댓글이 생성되어 댓글 목록 맨 위에 출력된다.
             - `FR03-2-6-4` 댓글은 생성 시간 내림차순으로 위에서 부터 출력된다.
-        - `FR03-2-7`미디어 재생 중 여섯 번째 버튼은 전체 화면 설정을 관리한다.
-            - `FR03-2-7-1`전체화면이 아니라면 전체화면으로 전환한다.
-                - `FR03-2-7-1-1` 전체화면에서는 미디어 하단의 버튼들을 감춰야한다.
-            - `FR03-2-7-2` 전체화면이라면 작은 화면으로 전환한다.
-        - `FR03-3-1` 해당 영상의 시청 기록이 존재한다면 팝업으로 마지막으로 시청한 시간부터 이어 볼 것인 지 팝업을 표시한다
-            - `FR03-3-1` 처음으로 버튼을 누르면 영상을 처음부터 재생한다.
-            - `FR03-3-2` 이어보기 버튼을 누르면 영상을 마지막 시청 시간부터 재생한다.
-        - `FR03-3-2`: 미디어 하단의 첫 번째 버튼을 누르면 이전 페이지로 돌아간다.
-        - `FR03-3-3`: 미디어 하단의 두 번째 버튼을 누르면 해당 영상에 좋아요을 추가할 수 있다.
-            - `FR03-3-3-1` 빈 하트를 누르면 좋아요가 추가된다.
-            - `FR03-3-3-2` 활성화된 하트를 누르면 하트가 빈 하트로 변경되며 좋아요가 삭제된다.
-        - `FR03-3-4`: 미디어 재생 중 세 번째 버튼을 누르면 북마크를 추가할 수 있다.
-            - `FR03-3-4-1` 빈 별을 누르면 북마크가 추가된다.
-            - `FR03-3-4-2`  활성화된 별을 누르면 빈 별로 변경되며 북마크가 삭제된다.
-        - `FR03-3-5`미디어 재생 중 네 번째 버튼을 누르면 영상의 재생 속도를 조절할 수 있다.
-        - `FR03-3-6`미디어 재생 중 다섯 번째 버튼은 해당 영상에 대한 시스템 자원현황을 볼 수 있다.
-        - `FR03-3-7`미디어 재생 중 여섯 번째 버튼은 전체 화면 설정을 관리한다.
-            - `FR03-3-7-1`전체화면이 아니라면 전체화면으로 전환한다.
-                - `FR03-3-7-1-1` 전체화면에서는 미디어 하단의 버튼들을 감춰야한다.
-            - `FR03-3-7-2` 전체화면이라면 작은 화면으로 전환한다.
+        - `FR03-2-3` 미디어 재생 중 두 번째 버튼을 누르면 해당 영상의 재생 속도를 조절할 수 있다.
+          ![image](https://github.com/user-attachments/assets/4a77e02e-c32a-47ff-9d24-ab1cd63acb0b)
+        - `FR03-2-4` 미디어 하단의 세 번째 버튼을 누르면 해당 영상에 좋아요을 추가할 수 있다.
+            - `FR03-2-4-1` 빈 하트를 누르면 좋아요가 추가된다.
+            - `FR03-2-4-2` 활성화된 하트를 누르면 하트가 빈 하트로 변경되며 좋아요가 삭제된다.
+        - `FR03-2-5` 미디어 재생 중 네 번째 버튼을 누르면 해당 영상에 북마크를 추가할 수 있다.
+            - `FR03-2-5-1` 빈 별을 누르면 북마크가 추가된다.
+            - `FR03-2-5-2`  활성화된 별을 누르면 빈 별로 변경되며 북마크가 삭제된다.
+        - `FR03-2-6`미디어 재생 중 다섯 번째 버튼은 전체 화면 설정을 관리한다.
+            - `FR03-2-6-1`전체화면이 아니라면 전체화면으로 전환한다.
+                - `FR03-2-6-1-1` 전체화면에서는 미디어 하단의 버튼들을 감춰야한다.
+            - `FR03-2-6-2` 전체화면이라면 작은 화면으로 전환한다.
 2. `FR04` Recommend 탭.  사용자의 취향 아카이브에 맞는 미디어를 추천해 태그와 함께 표시한다.
 (아카이브는 사용자의 선택한 취향 정보를 담고 있는 집합이다.)
 - `FR04-1` 사용자의 취향 아카이브를 표시한다.
+- ![image](https://github.com/user-attachments/assets/cd55275e-f0d7-4bb0-9ad2-35fa2739e4f7)
     - `FR04-1-1` 맨 왼쪽 아카이브는 추천 기준인 현재 아카이브를 표시한다.
     - `FR04-1-2` 현재 아카이브 옆으로 생성시간 내림차순으로 이전 아카이브를 표시한다.
     - `FR04-1-3` 아카이브에는 생성 시간과 선택한 취향 태그를 함께 표시한다.
@@ -133,15 +118,13 @@
 - `FR04-2` 현재 취향 아카이브에 의해 추천된 미디어 + 유저의 나이와 연령대에서 많이 보는 미디어를 표시한다.
 - `FR04-3` 조회수 상위 5개의 영상을 내림차순으로 표시한다.
     - `FR04-3-1` 각 영상의 조회수를 같이 표시한다.
-1. `FR05`: My Page 탭. 사용자 계정에 대한 다양한 정보를 표시한다.
+3 `FR05`: My Page 탭. 사용자 계정에 대한 다양한 정보를 표시한다.
     - `FR05-1` 사용자의 계정 정보를 표시한다.
     - `FR05-2` 사용자의 북마크 영상들을 표시한다
-    - `FR05-3` 사용자의 작성한 후기들을 표시한다.
+    - `FR05-3` 사용자의 작성한 한줄평들을 표시한다.
         - `FR05-3-1` 댓글이 작성된 영상 정보를 간략하게 표시한다.
-    - `FR05-4` 사용자의 접속 로그를 시각화해 표시한다
-    - `FR05-5` 로그아웃 버튼을 누르면 로그아웃된다.
-        - `FR05-5-1` 이 후 접속 시 첫 화면으로 전환된다.
-2. `FR06`: Status 탭. 시스템 자원 현황을 시각화해 그래프로 표시한다. (Luna API에서 참고하면 됨)
+    - 'FR05-4' 사용자의 좋아요 영상들을 표시한다.
+4 `FR06`: Status 탭. 시스템 자원 현황을 시각화해 그래프로 표시한다. (Luna API에서 참고하면 됨)
     - `FR06-1` 현재 TV에 대한 정보를 출력한다.
     - `FR06-2` 현재 CPU 현황을 user, system, nice, idle 네 가지 항목으로 나누어 파이 그래프에 나타낸다.
     - `FR06-3` 현재 Memory 현황을 current vmalloc size, swap used, usable memory 세 가지 항목으로 나누어 파이 그래프에 나타낸다.
@@ -156,7 +139,6 @@
 1. `CR01` Frontend는 Enact Framework로 작성한다.
 2. `CR02` BackEnd는 Spring boot Framework로 작성한다.
 3. `CR03` 데이터베이스는 MySql를 사용하며, Spring boot JPA를 사용하여 백엔드와 연결한다.
-4. `CR04`  AWS를 통해 배포하며 S3에 미디어 데이터를 저장한다.
 ***
 
 # 4. Architecture Overview
@@ -182,17 +164,38 @@
 - `FR04`: Videos component
     - loadVideos(): 데이터베이스에 존재하는 모든 동영상 목록을 조회한다.
 - `FR05`: Login component
-  
-- `FR06`: Main component
- 
-- `FR07`: Onboarding component
- 
-- `FR08`: Signup component
- 
-- `FR09`: UserState component
- 
-- `FR10`: Video component
-   
+    - handleLogin(): 사용자의 계정 정보를 전송해 서버에 인증 과정을 요청한다.
+- `FR06`: Onboarding component
+    - handleSelectGenre() : 선택한 장르 취향을 벡터로 관리한다.
+    - handleSubmit() : 생성한 취향 벡터를 서버에 전송해 저장한다.
+    - handleCloseButton() : 회원가입 완료 팝업을 닫는다.
+- `FR07`: Signup component
+    - handleLoginIdChange() : InputField의 loginId 값을 실시간으로 변수에 저장한다.
+    - handlePasswordChange() : InputField의 password 값을 실시간으로 변수에 저장한다.
+    - handleSummit() : 입력한 새 계정 정보를 서버에 전송해 회원가입을 요청한다.
+    - handleCloseButton : Header의 close버튼을 누를 시 바로 직전 패널로 돌아간다.
+- `FR08`: UserState component
+    - handleSummit() : 입력한 유저의 상세정보를 서버에 전송해 저장한다.
+    - handleGender() : 클릭한 Button의 값을 gender 변수에 저장한다.
+    - handleCloseButton : Header의 close버튼을 누를 시 바로 직전 패널로 돌아간다.
+- `FR09`: Video component
+    - toggleFullScreen() : 전체화면 버튼을 클릭 시 영상의 크기가 전체화면으로 변경된다.
+    - fetchIcons() : 랜더링 전에 좋아요와 북마크 여부를 서버에 요청해 icon을 상태에 맞게 설정한다.
+          - 좋아요를 눌렀다면 heart 아이콘을, 누르지 않았다면 hearthollow를 icon으로 설정한다.
+          - 북마크를 눌렀다면 star 아이콘을, 누르지 않았다면 starhollow를 icon으로 설정한다.
+    - fetchVideo() : video 정보와 시청기록을 조회한다.
+    - handlePlayFromStart() : 이어서 시청하기를 클릭하면 비디오의 현재 시점을 마지막 시청 시간으로 이동시킨다.
+    - handlePlayFromTimestamp() : 처음부터 시청하기를 클릭하면 비디오의 현재 시점을 처음으로 이동시킨다.
+    - handleLikeToggle() : 좋아요 버튼을 유저의 상태를 기반으로 수정한다.
+    - handleBookmarkToggle() : 북마크 버튼을 유저의 상태를 기반으로 수정한다.
+    - handleBack() : video Component의 backButton을 클릭 시 시청 기록을 생성하거나 업데이트해 저장하고 직전 패널로 이동한다.
+    - handlePopupClose() : 북마크와 좋아요 버튼을 누를 시 짧은 시간동안 팝업으로 현재 상태를 알리고 사라지게 한다.
+    - handleCommentToggle() : 서버에서 현재 비디오의 댓글들을 조회해 랜더링한다.
+    - handleRating() : 누른 별의 위치에 따라 starhollow 아이콘을 star 아이콘으로 수정해 랜더링한다.
+          - 4번째 별을 눌렀다면 1~4번째 별이 전부 star 아이콘으로 수정된다.
+    - handleCommentSubmit() : 사용자의 선택한 별점과 댓글을 서버에 전송해 댓글을 생성한다.
+    - handleSpeedChange() : 재생 속도를 수정한다.
+    - toggleSpeedPopup() : 선택 가능한 재생 속도를 팝업으로 띄운다.
 
 ### 4.1.2 Backend architecture
 
@@ -491,3 +494,735 @@
             4. **빠른 배포**: 이미지 기반 배포로 빠르게 배포 및 롤백이 가능함
             5. **확장성**: 마이크로서비스 아키텍처와 잘 어울리며, 필요에 따라 컨테이너를 손쉽게 추가하거나 제거 가능함
             6. **커뮤니티 및 레퍼런스**: Docker Hub에 다양한 이미지와 레퍼런스가 제공되어 빠르게 활용할 수 있음
+    ***
+  #Rest API#
+    
+    ### Request
+    
+    | ID | URL | HOST | METHOD |
+    | --- | --- | --- | --- |
+    | BA01-1 | /api/users | http://localhost:8080 | POST |
+    
+    ### Parameter
+    
+    | Name | Type | Description | Required |
+    | --- | --- | --- | --- |
+    | username | string | 사용자명 |  |
+    | email | string | 이메일 |  |
+    | password | string | 비밀번호 |  |
+    | profilePicture | Number(1~15) | 프로필 사진 번호 |  |
+    | gender | string(female,male,other) | 성별 |  |
+    | age | Number | 나이 |  |
+    
+    ### Response
+    
+    | Status code | Name | Type | Description |
+    | --- | --- | --- | --- |
+    | 200 |  | Object[] | 생성한 사용자의 정보 객체 |
+    | 400 | message | string | 중복된 이메일 에러메시지 |
+    | 403 | message | string | 이미 로그인한 상태 에러메시지 |
+    | 500 | message | string | 서버 오류 에러메시지 |
+
+# 1. 사용자 정보 저장 및 접근하기
+
+사용자 정보 저장 및 접근하기는 클라이언트로부터 받은 사용자 정보를 데이터베이스에 저장 및 수정하거나 요청된 사용자 정보를 반환하는 API입니다.
+
+## 1.1. Create user
+
+데이터베이스에 저장 요청 받은 새로운 사용자 정보를 데이터베이스에 저장하고 사용자 정보를 응답합니다.
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA01-1 | /api/v1/user/signup | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| username | string | 사용자명 | TRUE |
+| email | string | 이메일 | TRUE |
+| password | string | 비밀번호 | TRUE |
+| profilePicture | Number(1~15) | 프로필 사진 번호 | TRUE |
+| gender | string(female,male,other) | 성별 | TRUE |
+| age | Number | 나이 | TRUE |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 |  | Object[] | 생성한 사용자의 정보 객체 |
+| 400 | message | string | 중복된 이메일 에러메시지 |
+| 403 | message | string | 이미 로그인한 상태 에러메시지 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 1.2. Login
+
+회원가입을 완료한 유저가 로그인을 시도할 때, 올바른 ID와 PW가 입력되었는지 확인하고 로그인을 성공하면 JWT토큰을 발급하고 유저의 정보를 반환합니다.
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA01-2 | /login | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| username | string | 사용자명 | TRUE |
+| email | string | 이메일 | TRUE |
+| password | string | 비밀번호 | TRUE |
+| profilePicture | Number(1~15) | 프로필 사진 번호 | TRUE |
+| gender | string(female,male,other) | 성별 | TRUE |
+| age | Number | 나이 | TRUE |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 |  | Object[] | 생성한 사용자의 정보 객체 |
+| 400 | message | string | 중복된 이메일 에러메시지 |
+| 403 | message | string | 이미 로그인한 상태 에러메시지 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 1.3 Onboarding
+
+회원가입이 완료된 이후 필수적으로 진행되는 사용자 정보 수집 단계입니다. 
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA01-3 | /api/v1/user/onboarding/{userId} | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| username | string | 사용자명 |  |
+| nickname | string | 닉네임(별명) |  |
+| gender | string(female,male,other) | 성별 |  |
+| age | Number | 나이 |  |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | UserResponseDTO | Object[] | 생성한 사용자의 정보 객체
+userId, loginId, nickname, username, gender, age |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 1.4 Gather Genre Preference
+
+온보딩 단계에서 유저의 장르에 대한 선호도를 수집합니다. 총 10개의 영화 장르 중 최대 4개를 선택하게 합니다. 10개의 영화 장르는 아래와 같습니다.
+
+```java
+private static final List<String> *ALL_GENRES* = Arrays.*asList*(        
+	"Action", "Comedy", "Drama", "SF", "Romance", 
+	"Thriller", "Horror", "Animation", "Crime", "Adventure", "War"
+);
+```
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA01-4 | /api/v1/user-genre/onboarding/{userId} | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| genrePreferences | `Map<String, Double>` | 위에 기재된 `ALL_GENRES` 중 입력하고자 하는 장르만 기재해도 가능. (즉, 반드시 각 10개 장르에 대해 모두 기입 안해도 됨)
+장르 이름이 `ALL_GENRES` 에 없으면 저절로 누락함. 별도로 값을 기입하지 않은 장르에 대해서는 Default값인 0.0으로 저장됨.
+
+유저가 선호하는 장르로 선택하면 `1.0` , 선택 안하면 `0.0` 으로 온보딩 단계에서 수집. | {
+    "genrePreferences": {
+        "Action": 1.0,
+        "Romance":1.0,
+        "Adventure":1.0
+    }
+} |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | UserResponseDTO | Object[] | 생성한 사용자의 정보 객체
+userId, loginId, nickname, username, gender, age |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 1.5 Recommend
+
+기본 회원 정보와 온보딩 과정에서 수집한 유저의 취향 정보를 토대로 개인 맞춤형 비디오 5개를 추천합니다. 
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA01-5 | /api/v1/user/recommend/{userId} | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | List<VideoResponseDTO> | Object[] | 추천받은 비디오의 정보 객체의 리스트
+videoId, title, subtitle, source, thumbnail, tagList, likes, comments, views, doesLike |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+# 2. 아카이브
+
+## 2.1 아카이브 추가
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA02-1 | /api/v1/archive/{userId} | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| userGenreId | Long | 아카이브에 추가할 해당 유저의 userGenre의 ID   |  |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | ArchiveDTO | Object[] | 성공적으로 추가된 아카이브의 정보
+Long archiveId;
+Long userId;
+List<String> userGenreList; LocalDateTime updatedAt; |
+| 403 | message | string | 해당 회원 데이터와 취향 벡터 데이터가 이미 존재하는 충돌 에러메시지
+`이미 해당 조합의 아카이브가 존재합니다.` |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다`
+회원의 취향 벡터 부재 에러메시지
+`이미 해당 조합의 아카이브가 존재합니다.` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 2.2 아카이브 삭제
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA02-2 | /api/v1/archive/{userId}/{archiveId} | http://localhost:8080 | DELETE |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | ArchiveDTO | Object[] | 성공적으로 삭제된 아카이브의 정보
+Long archiveId;
+Long userId;
+List<String> userGenreList; LocalDateTime updatedAt; |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다`
+아카이브 부재 에러메시지
+`해당 아카이브는 존재하지 않습니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 2.3  아카이브 수정
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA02-3 | /api/v1/archive/{userId}/{archiveId} | http://localhost:8080 | PATCH |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| userGenreVector | string | 사용자명 | 수정 결과로 원하는 벡터 (사전에 설정한 10개의 영화 장르에 맞춰 값을 입력)
+”userGenreVector”: “[1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]” |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | ArchiveDTO | Object[] | 성공적으로 수정된 아카이브의 정보
+Long archiveId;
+Long userId;
+List<String> userGenreList; LocalDateTime updatedAt; |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다`
+아카이브 부재 에러메시지
+`해당 아카이브는 존재하지 않습니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 2.4 유저의 전체 아카이브 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA02-4 | /api/v1/archive/{userId}/all | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `List<ArchiveResponseDTO>` | Object[] | 유저의 모든 아카이브를 조회하여 리스트로 반환 (`ArchiveResponseDTO`는 아래와 같음)
+Long archiveId;
+Long userId;
+List<String> preferenceList;
+LocalDateTime updatedAt; |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 2.5 유저의 특정 아카이브 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA02-5 | /api/v1/archive/history/{userId}/{historyId} | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 |  | Object[] | 생성한 사용자의 정보 객체 |
+| 400 | message | string | 해당 회원과 아카이브 조합 부재 에러메시지
+`현재 유저는 해당 archiveId를 갖는 archive를 소유하고 있지 않습니다.` |
+| 404 | message | string | 회원 데이터 부재 에러메시지
+`존재하지 않는 회원입니다`
+아카이브 부재 에러메시지
+`해당 아카이브는 존재하지 않습니다` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+# 3. 비디오 정보 저장 및 접근하기
+
+## 3.1 비디오 전체 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-1 | /api/v1/video | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `List<VideoResponseDTO>` | Object[] | 전체 비디오 목록을 조회 (`VideoResponseDTO`는 아래와 같음)
+Long videoId;
+String title;
+String subtitle;
+String source;
+String thumbnail;
+String description;
+List<String> tagList;
+Integer likes;
+Integer comments;
+Integer views;
+Boolean doesLike; |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 3.2 특정 비디오 정보 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-2 | /api/v1/video/{videoId} | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Video` | Object | videoId에 해당되는 비디오 반환 |
+| 400 | message | string | 중복된 이메일 에러메시지 |
+| 403 | message | string | 이미 로그인한 상태 에러메시지 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 3.3 비디오에 달린 댓글 전체 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-3 | /api/v1/video/{videoId}/comment | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `List<Comment>` | Object[] | videoId에 해당되는 비디오와 매핑되는 모든 Comment를 리스트로 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 3.4 조회수 상위 5개 비디오 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-4 | /api/v1/video/view-top5 | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `List<VideoResponseDTO>`  | Object[] | 조회수(views) 상위 5개의 비디오 목록을 조회 (`VideoResponseDTO`는 아래와 같음)
+Long videoId;
+String title;
+String subtitle;
+String source;
+String thumbnail;
+String description;
+List<String> tagList;
+Integer likes;
+Integer comments;
+Integer views;
+Boolean doesLike; |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 3.5 비디오 조회 증가
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-5 | /api/v1/video/{videoId}/view | http://localhost:8080 | POST |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `VideoResponseDTO` | Object | 생성한 비디오의 정보 객체 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 3.6 비디오 시청기록 추가
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-6 | /api/v1/video/{videoId}/history | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| timestamp | int | 마지막 시청 시점의 타임스탬프  |  |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 |  | Boolean | 마지막 시청 시점 추가 성공 시 True 반환, 실패 시 False 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 3.7 비디오 시청기록 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA03-7 | /api/v1/video/{videoId}/history | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `VideoHistory` | Object | videoId에 해당되는 비디오의 기록 (`VideoHistory`는 아래와 같음)
+Long id;
+User user;
+Video video;
+int timestamp; |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+# 4. 북마크 정보 저장 및 조회하기
+
+## 4.1 북마크 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA04-1 | /api/v1/bookmark/{videoId} | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Bookmark` | Object | videoId에 해당되는 비디오 (`Bookmark`는 아래와 같음)
+Long id;
+User user;
+Video video; |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 4.2 북마크 추가
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA04-2 | /api/v1/bookmark/{videoId} | http://localhost:8080 | POST |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Boolean` | Object | videoId에 해당되는 비디오가 북마크에 포함되면 True, 아니면 False를 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 4.3 북마크 제거
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA04-3 | /api/v1/bookmark/{videoId} | http://localhost:8080 | DELETE |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Boolean` | Object | videoId에 해당되는 비디오가 북마크에서 제거되면 True, 아니면 False를 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+# 5. 댓글 정보 저장 및 조회하기
+
+## 5.1 댓글 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA05-1 | /api/v1/comment/{videoId} | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `List<Comment>` | Object[] | videoId에 해당되는 비디오에 달린 댓글 목록을 리스트로 반환 (`Comment`는 아래와 같음)
+Long id;
+int rating;
+String content;
+User user;
+Video video; |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 5.2 댓글 추가
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA05-2 | /api/v1/comment/{videoId} | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| rating | int | 평점 (최소 1~최대 5) |  |
+| content | string | 댓글 내용 |  |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Boolean` | Object | videoId에 해당되는 비디오에 댓글이 정상적으로 추가되면 True, 아니면 False를 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 5.3 댓글 삭제
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA05-3 | /api/v1/comment/{commentId} | http://localhost:8080 | DELETE |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Boolean` | Object | commentId에 해당되는 댓글이 제거되면 True, 아니면 False를 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 5.4 댓글 수정
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA05-4 | /api/v1/comment/{userId}/{commentId} | http://localhost:8080 | POST |
+
+### Parameter
+
+| Name | Type | Description | Required |
+| --- | --- | --- | --- |
+| rating | int | 평점 (최소 1~최대 5) |  |
+| content | string | 댓글 내용 |  |
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Boolean` | Object | commentId에 해당되는 댓글이 정상적으로 변경되면 True, 아니면 False를 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+# 6. 좋아요 정보 저장 및 조회하기
+
+## 6.1 좋아요 누른 비디오 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA06-1 | /api/v1/like/{videoId} | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Like` | Object | videoId에 해당되는 비디오에 달린 좋아요를 반환 (`Like`는 아래와 같음)
+Long id;
+User user;
+Video video; |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 6.2 좋아요 추가
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA06-2 | /api/v1/like/{userId}/{videoId} | http://localhost:8080 |  |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | message | string | `Like added successfully` |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 6.3 좋아요 삭제
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA06-3 | /api/v1/like/{videoId} | http://localhost:8080 | DELETE |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `Boolean` | Object | videoID에 해당되는 비디오의 좋아요가 감소하면 True, 아니면 False를 반환 |
+| 500 | message | string | 서버 오류 에러메시지 |
+
+## 6.4 사용자가 속한 타겟 그룹의 좋아요 내림차순 결과 조회
+
+### Request
+
+| ID | URL | HOST | METHOD |
+| --- | --- | --- | --- |
+| BA06-4 | /api/v1/comment/{userId}/target-group | http://localhost:8080 | GET |
+
+### Parameter
+
+없음
+
+### Response
+
+| Status code | Name | Type | Description |
+| --- | --- | --- | --- |
+| 200 | `List<VideoResponseDTO>` | Object[] | 타겟 그룹의 좋아요 상위 5개  비디오 목록을 조회 (`VideoResponseDTO`는 아래와 같음)
+Long videoId;
+String title;
+String subtitle;
+String source;
+String thumbnail;
+String description;
+List<String> tagList;
+Integer likes;
+Integer comments;
+Integer views;
+Boolean doesLik |
+| 500 | message | string | 서버 오류 에러메시지 |
