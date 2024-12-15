@@ -109,9 +109,9 @@ const Status = () => {
 					customData.cur_vmallocSize
 				],
 				backgroundColor: [
-					'rgba(255, 99, 132, 0.3)',
-					'rgba(54, 162, 235, 0.3)',
-					'rgba(255, 206, 86, 0.3)'
+					'rgba(255, 99, 132, 0.7)',
+					'rgba(54, 162, 235, 0.7)',
+					'rgba(255, 206, 86, 0.7)'
 				],
 				borderColor: ['gray'],
 				borderWidth: 0.5
@@ -131,10 +131,10 @@ const Status = () => {
 					customData.idle
 				],
 				backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)'
+					'rgba(255, 99, 132, 0.7)',
+					'rgba(54, 162, 235, 0.7)',
+					'rgba(255, 206, 86, 0.7)',
+					'rgba(75, 192, 192, 0.7)'
 				],
 				borderColor: ['gray'],
 				borderWidth: 0.5

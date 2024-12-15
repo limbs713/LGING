@@ -1,38 +1,33 @@
-import Alert from '@enact/sandstone/Alert';
-import BodyText from '@enact/sandstone/BodyText';
 import {Header, Panel} from '@enact/sandstone/Panels';
-import {usePopup} from './MainState';
-
 import css from './Main.module.less';
-import $L from '@enact/i18n/$L';
-import {useProcStat} from '../hooks/useData';
-
 import Scroller from '@enact/sandstone/Scroller';
-import Item from '@enact/sandstone/Item';
-import VirtualGridList from '@enact/sandstone/VirtualList';
-import ImageItem from '@enact/sandstone/ImageItem';
 import MediaOverlay from '@enact/sandstone/MediaOverlay';
 import IconItem from '@enact/sandstone/IconItem';
 import styled from 'styled-components';
 import {useNavigate} from 'react-router-dom';
 
-	const handlePlayClick = () => {
-		openPopup('play');
-	};
+const CustomHeader = styled(Header)`
+	.enact_ui_Layout_Layout_layout.enact_sandstone_Panels_Header_titlesRow {
+		padding-bottom: 0;
+	}
+`;
 
-	const handleInfoClick = () => {
-		openPopup('info');
-	};
+const StyledIconItem = styled(IconItem)`
+	background: #1b1b1b;
+	border-radius: 15px;
+	width: 240px;
+	height: 180px;
 
-	const renderItem = ({index, ...rest}) => (
-		<ImageItem
-			{...rest}
-			src={`https://picsum.photos/300/450?random=${index}`}
-			caption={$L('Movie {index}', {index: index + 1})}
-		/>
-	);
+	& > .enact_ui_Layout_Layout_layout {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		padding-block-end: 1rem;
+	}
 
-    
+	& .enact_sandstone_Icon_Icon_icon.enact_sandstone_Icon_Icon_large {
+		--icon-size: 5rem;
+	}
 
 	& .enact_sandstone_IconItem_IconItem_label {
 		font-size: 1.25rem;
@@ -49,10 +44,7 @@ const Main = props => {
 		<Panel {...props} className={css.homeBackground}>
 			<Scroller className={css.centeredScroller} verticalScrollbar="hidden">
 				<div>
-					<CustomHeader
-						type="compact"
-						title="LGING"
-					/>
+					<CustomHeader type="compact" title="LGING" />
 					<MediaOverlay
 						className={css.fullScreenOverlay}
 						css={{
@@ -107,35 +99,7 @@ const Main = props => {
 						></StyledIconItem>
 					</div>
 				</div>
-				<div className={css.netflixRow}>
-					<BodyText className={css.netflixRowTitle}>
-						{$L('Trending Now')}
-					</BodyText>
-					<VirtualGridList
-						dataSize={20}
-						itemRenderer={renderItem}
-						itemSize={450}
-						horizontalScrollbar="hidden"
-						direction="horizontal"
-					/>
-				</div>
-				<div className={css.netflixRow}>
-					<BodyText className={css.netflixRowTitle}>
-						{$L('Only on Netflix')}
-					</BodyText>
-					<VirtualGridList
-						dataSize={20}
-						itemRenderer={renderItem}
-						itemSize={450}
-						horizontalScrollbar="hidden"
-						direction="horizontal"
-					/>
-				</div>
 			</Scroller>
-
-			<Alert open={procStat.open} onClose={procStat.onClose}>
-				{$L('Process completed successfully!')}
-			</Alert>
 		</Panel>
 	);
 };
